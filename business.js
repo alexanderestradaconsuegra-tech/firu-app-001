@@ -42,6 +42,7 @@ async function initBusiness() {
   await loadListing();
   loadBizAppointments();
   loadReviews();
+  loadBizNotifSettings();
 }
 
 $('#logoutBtn')?.addEventListener('click', async () => { await signOut(); window.location.href = 'index.html'; });
@@ -356,6 +357,75 @@ function renderReviews(reviews) {
 ════════════════════════════════════════════ */
 $('#upgradePlanBtn')?.addEventListener('click', () => {
   toast('Próximamente: activación de plan Premium con pago en línea 🚀', 'info', '💳');
+});
+
+/* ════════════════════════════════════════════
+   NOTIFICACIONES — configuración
+════════════════════════════════════════════ */
+async function loadBizNotifSettings() {
+  const { data } = await supabase
+    .from('profiles')
+    .select('notification_email, notification_phone, n8n_webhook_url, notif_appointments')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (!data) return;
+  const set = (id, val) => { const el = document.querySelector(id); if (el) el.value = val || ''; };
+  set('#n8nWebhook', data.n8n_webhook_url);
+  set('#notifEmail',  data.notification_email);
+  set('#notifPhone',  data.notification_phone);
+  document.querySelector('#toggleBizAppts')?.classList.toggle('on', data.notif_appointments !== false);
+  document.querySelector('#toggleBizReviews')?.classList.toggle('on', true);
+}
+
+['#toggleBizAppts', '#toggleBizReviews'].forEach(id =>
+  document.querySelector(id)?.addEventListener('click', () =>
+    document.querySelector(id).classList.toggle('on')
+  )
+);
+
+document.querySelector('#saveNotifBtn')?.addEventListener('click', async () => {
+  const btn = document.querySelector('#saveNotifBtn');
+  setLoading(btn, true);
+
+  const { error } = await supabase.from('profiles').update({
+    n8n_webhook_url:    document.querySelector('#n8nWebhook')?.value.trim() || null,
+    notification_email: document.querySelector('#notifEmail')?.value.trim()  || null,
+    notification_phone: document.querySelector('#notifPhone')?.value.trim()  || null,
+    notif_appointments: document.querySelector('#toggleBizAppts')?.classList.contains('on'),
+  }).eq('id', currentUser.id);
+
+  if (error) toast('Error guardando configuración', 'error', '⚠️');
+  else toast('Configuración guardada ✓', 'success', '⚙️');
+  setLoading(btn, false);
+});
+
+document.querySelector('#testWebhookBtn')?.addEventListener('click', async () => {
+  const url = document.querySelector('#n8nWebhook')?.value.trim();
+  if (!url) return toast('Ingresa la URL del webhook primero', 'info', '⚠️');
+  const btn = document.querySelector('#testWebhookBtn');
+  setLoading(btn, true);
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:       'test',
+        title:      '🧪 Prueba de conexión FIRU Negocios',
+        owner_name: currentUser.user_metadata?.full_name || 'Negocio',
+        email:      document.querySelector('#notifEmail')?.value.trim() || currentUser.email,
+        pet_name:   'Cliente de prueba',
+        date:       new Date().toLocaleDateString('es'),
+        time:       new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }),
+        message:    'Conexión con FIRU Negocios funcionando ✓',
+      }),
+    });
+    if (res.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
+    else        toast('El webhook respondió con error.', 'error', '⚠️');
+  } catch (_) {
+    toast('No se pudo conectar al webhook. Verifica la URL.', 'error', '⚠️');
+  }
+  setLoading(btn, false);
 });
 
 /* ── Arranque ───────────────────────────────── */

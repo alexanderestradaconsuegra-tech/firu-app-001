@@ -83,9 +83,9 @@ $('#loginForm').addEventListener('submit', async e => {
 
   setLoading(btn, true);
   try {
-    await signIn(email, pass);
+    const { data } = await signIn(email, pass);
     showMsg('¡Bienvenido de vuelta! Redirigiendo…', 'success');
-    const dest = data.user?.user_metadata?.role === 'business' ? 'business.html' : 'dashboard.html';
+    const dest = data?.user?.user_metadata?.role === 'business' ? 'business.html' : 'dashboard.html';
     setTimeout(() => window.location.href = dest, 1000);
   } catch (err) {
     const msgs = {

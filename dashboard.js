@@ -51,6 +51,7 @@ async function initDash() {
   await loadPets();
   loadReminders();
   loadAppointments();
+  loadNotifSettings();
 }
 
 $('#logoutBtn')?.addEventListener('click', async () => {
@@ -554,22 +555,27 @@ $('#apptForm').addEventListener('submit', async e => {
   const btn = $('#saveApptBtn');
   setLoading(btn, true);
 
-  const { error } = await supabase.from('appointments').insert({
-    user_id:  currentUser.id,
-    pet_id:   $('#aPet').value  || null,
-    title:    $('#aTitle').value.trim(),
-    type:     $('#aType').value,
-    date:     $('#aDate').value,
-    clinic:   $('#aClinic').value.trim() || null,
-    vet_name: $('#aVet').value.trim()    || null,
-    status:   'pendiente',
-  });
+  const { data: newAppt, error } = await supabase
+    .from('appointments')
+    .insert({
+      user_id:  currentUser.id,
+      pet_id:   $('#aPet').value  || null,
+      title:    $('#aTitle').value.trim(),
+      type:     $('#aType').value,
+      date:     $('#aDate').value,
+      clinic:   $('#aClinic').value.trim() || null,
+      vet_name: $('#aVet').value.trim()    || null,
+      status:   'pendiente',
+    })
+    .select()
+    .single();
 
   if (error) toast('Error guardando cita', 'error', '⚠️');
   else {
     toast('Cita agendada ✓', 'success', '📅');
     closeApptModal();
     loadAppointments();
+    notifyAppointment(newAppt.id);
   }
   setLoading(btn, false);
 });
@@ -578,6 +584,88 @@ $('#apptForm').addEventListener('submit', async e => {
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   closePetModal(); closeReminderModal(); closeHealthModal(); closeApptModal();
+});
+
+/* ════════════════════════════════════════════
+   NOTIFICACIONES — configuración
+════════════════════════════════════════════ */
+async function notifyAppointment(apptId) {
+  try {
+    await fetch('https://jyceccbtkritogjzqcma.supabase.co/functions/v1/notify-appointment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ appointment_id: apptId }),
+    });
+  } catch (_) {}
+}
+
+async function loadNotifSettings() {
+  const { data } = await supabase
+    .from('profiles')
+    .select('notification_email, notification_phone, n8n_webhook_url, notif_reminders, notif_appointments, notif_vaccines')
+    .eq('id', currentUser.id)
+    .single();
+
+  if (!data) return;
+  const set = (id, val) => { const el = $(id); if (el) el.value = val || ''; };
+  set('#n8nWebhook', data.n8n_webhook_url);
+  set('#notifEmail',  data.notification_email);
+  set('#notifPhone',  data.notification_phone);
+
+  const tog = (id, on) => $(id)?.classList.toggle('on', on ?? true);
+  tog('#toggleRemindersNotif', data.notif_reminders !== false);
+  tog('#toggleApptsNotif',     data.notif_appointments !== false);
+  tog('#toggleVaccinesNotif',  data.notif_vaccines === true);
+}
+
+['#toggleRemindersNotif', '#toggleApptsNotif', '#toggleVaccinesNotif'].forEach(id =>
+  $(id)?.addEventListener('click', () => $(id).classList.toggle('on'))
+);
+
+$('#saveNotifBtn')?.addEventListener('click', async () => {
+  const btn = $('#saveNotifBtn');
+  setLoading(btn, true);
+
+  const { error } = await supabase.from('profiles').update({
+    n8n_webhook_url:    $('#n8nWebhook').value.trim() || null,
+    notification_email: $('#notifEmail').value.trim()  || null,
+    notification_phone: $('#notifPhone').value.trim()  || null,
+    notif_reminders:    $('#toggleRemindersNotif').classList.contains('on'),
+    notif_appointments: $('#toggleApptsNotif').classList.contains('on'),
+    notif_vaccines:     $('#toggleVaccinesNotif').classList.contains('on'),
+  }).eq('id', currentUser.id);
+
+  if (error) toast('Error guardando configuración', 'error', '⚠️');
+  else toast('Configuración guardada ✓', 'success', '⚙️');
+  setLoading(btn, false);
+});
+
+$('#testWebhookBtn')?.addEventListener('click', async () => {
+  const url = $('#n8nWebhook').value.trim();
+  if (!url) return toast('Ingresa la URL del webhook primero', 'info', '⚠️');
+  const btn = $('#testWebhookBtn');
+  setLoading(btn, true);
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type:       'test',
+        title:      '🧪 Prueba de conexión FIRU',
+        owner_name: currentUser.user_metadata?.full_name || 'Usuario',
+        email:      $('#notifEmail').value.trim() || currentUser.email,
+        pet_name:   'Mascota de prueba',
+        date:       new Date().toLocaleDateString('es'),
+        time:       new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }),
+        message:    'Si ves esto, la conexión con FIRU funciona correctamente ✓',
+      }),
+    });
+    if (res.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
+    else        toast('El webhook respondió con error. Revisa n8n.', 'error', '⚠️');
+  } catch (_) {
+    toast('No se pudo conectar al webhook. Verifica la URL.', 'error', '⚠️');
+  }
+  setLoading(btn, false);
 });
 
 /* ── Arranque ───────────────────────────────── */

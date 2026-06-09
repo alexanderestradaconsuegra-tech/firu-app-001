@@ -51,6 +51,7 @@
       <button class="dash-nav-item" data-section="citas"          type="button"><span class="nav-icon">📅</span><span>Citas recibidas</span><span class="nav-badge" id="citasBadge" hidden>0</span></button>
       <button class="dash-nav-item" data-section="resenas"        type="button"><span class="nav-icon">⭐</span><span>Reseñas</span></button>
       <button class="dash-nav-item" data-section="plan"           type="button"><span class="nav-icon">🚀</span><span>Mi plan</span></button>
+      <button class="dash-nav-item" data-section="notif"          type="button"><span class="nav-icon">⚙️</span><span>Notificaciones</span></button>
     </nav>
 
     <!-- Vista previa listing -->
@@ -270,6 +271,92 @@
       </div>
     </section>
 
+    <!-- ── NOTIFICACIONES ── -->
+    <section class="dash-section" id="sec-notif">
+      <div class="dash-section-head">
+        <div><h2>Notificaciones</h2><p>Recibe alertas cuando llegan nuevas citas o reseñas</p></div>
+      </div>
+
+      <div class="card notif-card" style="margin-bottom:1.25rem">
+        <div class="notif-card-head">
+          <span>⚡</span>
+          <div>
+            <h4>Webhook n8n</h4>
+            <p>Conecta n8n para recibir alertas de nuevas citas en tiempo real por email o WhatsApp</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="n8nWebhook">URL del webhook</label>
+          <input type="url" id="n8nWebhook" placeholder="https://tu-n8n.com/webhook/firu-notificaciones" />
+        </div>
+        <button class="secondary-btn" id="testWebhookBtn" type="button" style="align-self:flex-start">
+          <span class="btn-text">🧪 Probar conexión</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+      </div>
+
+      <div class="card" style="margin-bottom:1.25rem">
+        <h4 style="margin-bottom:1rem">Datos de contacto</h4>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="notifEmail">Email para notificaciones</label>
+            <input type="email" id="notifEmail" placeholder="negocio@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="notifPhone">WhatsApp / Teléfono</label>
+            <input type="tel" id="notifPhone" placeholder="+1 555 0000" />
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:1.25rem">
+        <h4 style="margin-bottom:1rem">¿Qué quieres recibir?</h4>
+        <div class="notif-toggles">
+          <div class="notif-toggle-row">
+            <div class="notif-toggle-info">
+              <span>📅</span>
+              <div>
+                <strong>Nueva cita recibida</strong>
+                <span>Alerta inmediata cuando un cliente agenda contigo</span>
+              </div>
+            </div>
+            <button class="toggle-btn on" id="toggleBizAppts" type="button"></button>
+          </div>
+          <div class="notif-toggle-row">
+            <div class="notif-toggle-info">
+              <span>⭐</span>
+              <div>
+                <strong>Nueva reseña</strong>
+                <span>Cuando un cliente deja una reseña en tu perfil</span>
+              </div>
+            </div>
+            <button class="toggle-btn on" id="toggleBizReviews" type="button"></button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-bottom:1.5rem">
+        <button class="primary-btn" id="saveNotifBtn" type="button">
+          <span class="btn-text">💾 Guardar configuración</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+      </div>
+
+      <div class="card notif-guide">
+        <h4>🚀 Cómo configurar n8n en EasyPanel</h4>
+        <ol class="notif-steps">
+          <li>En EasyPanel, crea una nueva app con imagen Docker <code>n8nio/n8n</code></li>
+          <li>Accede a tu n8n e importa el archivo <code>firu-notifications.json</code></li>
+          <li>Configura tus credenciales SMTP en n8n (Settings → Credentials → SMTP)</li>
+          <li>Activa el workflow y copia la URL del nodo "Webhook FIRU"</li>
+          <li>Pégala arriba en el campo "URL del webhook" y guarda</li>
+        </ol>
+        <a href="n8n-workflows/firu-notifications.json" download class="secondary-btn" style="display:inline-flex;margin-top:0.85rem;text-decoration:none">
+          ⬇️ Descargar workflow de n8n
+        </a>
+      </div>
+    </section>
+
   </main>
 </div>
 
@@ -279,6 +366,7 @@
   <button class="bottom-nav-item" data-section="citas"          type="button"><span>📅</span><span>Citas</span></button>
   <button class="bottom-nav-item" data-section="resenas"        type="button"><span>⭐</span><span>Reseñas</span></button>
   <button class="bottom-nav-item" data-section="plan"           type="button"><span>🚀</span><span>Plan</span></button>
+  <button class="bottom-nav-item" data-section="notif"          type="button"><span>⚙️</span><span>Config</span></button>
 </nav>
 
 <div class="toast-container" id="toastContainer" aria-live="polite"></div>
