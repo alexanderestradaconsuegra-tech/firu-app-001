@@ -279,18 +279,18 @@ button, a { font-family: var(--font); cursor: pointer; transition: all 0.2s var(
 .brand-mark {
   width: 2.75rem;
   height: 2.75rem;
-  background: linear-gradient(135deg, var(--coral-alpha), var(--teal-alpha));
+  background: var(--bg);
   border: 1.5px solid var(--border-hi);
   border-radius: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.3rem;
+  overflow: hidden;
   flex-shrink: 0;
   transition: box-shadow 0.3s;
 }
 .brand-mark:hover { box-shadow: 0 0 20px var(--coral-glow); }
-.brand-mark svg { width: 100%; height: 100%; }
+.brand-mark svg, .brand-mark img { width: 100%; height: 100%; object-fit: contain; }
 
 .top-actions { display: flex; align-items: center; gap: 0.2rem; }
 
