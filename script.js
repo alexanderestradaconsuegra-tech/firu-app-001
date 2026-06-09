@@ -1,4 +1,5 @@
 /* FIRU · Interactive layer */
+import { supabase } from './supabase.js';
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 const $$ = (s, ctx = document) => [...ctx.querySelectorAll(s)];
@@ -312,3 +313,51 @@ window.addEventListener('load', () => {
     }
   });
 });
+
+/* ================================================================
+   Directorio — cargar desde Supabase
+   ================================================================ */
+const chipMap  = { clinica: 'teal', tienda: 'alt', servicio: 'cyan' };
+const labelMap = { clinica: 'Clínica', tienda: 'Tienda', servicio: 'Servicio' };
+
+function starsHtml(rating) {
+  const full  = Math.floor(rating);
+  const empty = 5 - full;
+  return '★'.repeat(full) + '☆'.repeat(empty);
+}
+
+async function loadDirectory() {
+  const grid = $('#petGrid')?.closest('section')?.nextElementSibling?.nextElementSibling?.querySelector('.directory-grid');
+  const dirGrid = document.querySelector('.directory-grid');
+  if (!dirGrid) return;
+
+  const { data, error } = await supabase.from('directory').select('*').eq('is_active', true).order('is_featured', { ascending: false });
+  if (error || !data?.length) return;
+
+  dirGrid.innerHTML = '';
+  data.forEach(item => {
+    const chip  = chipMap[item.type]  || '';
+    const label = labelMap[item.type] || item.type;
+    const card  = document.createElement('article');
+    card.className = 'card directory-card reveal';
+    card.dataset.type = item.type;
+    card.innerHTML = `
+      <span class="chip ${chip}">${label}</span>
+      <h4>${item.name}</h4>
+      <div class="dir-rating">${starsHtml(item.rating)} <span style="color:var(--text-3);margin-left:0.2rem">${item.rating} (${item.review_count})</span></div>
+      <p>${item.description || ''}</p>
+      <div class="dir-tags">
+        ${item.hours ? `<span class="dir-tag">${item.hours}</span>` : ''}
+        ${item.phone ? `<span class="dir-tag">${item.phone}</span>` : ''}
+      </div>
+      <strong class="price">${item.price_model || '—'}</strong>
+    `;
+    dirGrid.appendChild(card);
+    requestAnimationFrame(() => card.classList.add('visible'));
+  });
+
+  // re-apply filters after load
+  applyDirFilters();
+}
+
+loadDirectory();
