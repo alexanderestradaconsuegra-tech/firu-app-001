@@ -85,7 +85,7 @@ $('#loginForm').addEventListener('submit', async e => {
   try {
     await signIn(email, pass);
     showMsg('¡Bienvenido de vuelta! Redirigiendo…', 'success');
-    setTimeout(() => window.location.href = 'index.html', 1000);
+    setTimeout(() => window.location.href = 'dashboard.html', 1000);
   } catch (err) {
     const msgs = {
       'Invalid login credentials': 'Correo o contraseña incorrectos.',

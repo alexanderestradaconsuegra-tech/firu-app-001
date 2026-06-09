@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFBF5" />
+  <title>FIRU · Mi panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body class="dash-body">
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="dash-header">
+  <a href="index.html" class="dash-logo">
+    <div class="brand-mark sm">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#FF6B6B" opacity="0.2"/>
+        <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#6C63FF"/>
+        <circle cx="26" cy="29" r="2" fill="#1A1340"/>
+        <circle cx="38" cy="29" r="2" fill="#1A1340"/>
+        <path d="M29 34c2 2 4 2 6 0" stroke="#1A1340" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <strong>FIRU</strong>
+  </a>
+
+  <div class="dash-header-right">
+    <div class="user-pill" id="userPill">
+      <span class="user-avatar">🐾</span>
+      <span class="user-name" id="userName">Cargando…</span>
+      <button class="ghost-btn logout-btn" id="logoutBtn" type="button" title="Cerrar sesión">↩</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     SHELL
+══════════════════════════════════════════════ -->
+<div class="dash-shell">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <nav class="dash-nav" aria-label="Panel de navegación">
+      <button class="dash-nav-item active" data-section="mascotas" type="button">
+        <span class="nav-icon">🐾</span>
+        <span>Mis mascotas</span>
+      </button>
+      <button class="dash-nav-item" data-section="recordatorios" type="button">
+        <span class="nav-icon">🔔</span>
+        <span>Recordatorios</span>
+        <span class="nav-badge" id="reminderBadge" hidden>0</span>
+      </button>
+      <button class="dash-nav-item" data-section="salud" type="button">
+        <span class="nav-icon">❤️</span>
+        <span>Salud</span>
+      </button>
+      <button class="dash-nav-item" data-section="citas" type="button">
+        <span class="nav-icon">📅</span>
+        <span>Citas</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="dash-main">
+
+    <!-- ── MASCOTAS ── -->
+    <section class="dash-section active" id="sec-mascotas">
+      <div class="dash-section-head">
+        <div>
+          <h2>Mis mascotas</h2>
+          <p id="petCount">Cargando…</p>
+        </div>
+        <button class="primary-btn" id="addPetBtn" type="button">+ Añadir mascota</button>
+      </div>
+
+      <div class="pet-dashboard-grid" id="petDashGrid">
+        <div class="loading-state">
+          <span class="loading-spinner"></span>
+          <p>Cargando mascotas…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RECORDATORIOS ── -->
+    <section class="dash-section" id="sec-recordatorios">
+      <div class="dash-section-head">
+        <div>
+          <h2>Recordatorios</h2>
+          <p>Rutinas y alertas de tus mascotas</p>
+        </div>
+        <button class="primary-btn" id="addReminderBtn" type="button">+ Nuevo recordatorio</button>
+      </div>
+
+      <div class="reminder-groups" id="reminderGroups">
+        <div class="loading-state">
+          <span class="loading-spinner"></span>
+          <p>Cargando recordatorios…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SALUD ── -->
+    <section class="dash-section" id="sec-salud">
+      <div class="dash-section-head">
+        <div>
+          <h2>Salud</h2>
+          <p>Historial médico y vacunas</p>
+        </div>
+        <button class="primary-btn" id="addHealthBtn" type="button">+ Registrar</button>
+      </div>
+
+      <div class="health-pet-selector" id="healthPetSelector"></div>
+      <div class="health-content" id="healthContent">
+        <div class="empty-state">
+          <span>❤️</span>
+          <p>Selecciona una mascota para ver su historial</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CITAS ── -->
+    <section class="dash-section" id="sec-citas">
+      <div class="dash-section-head">
+        <div>
+          <h2>Citas</h2>
+          <p>Agenda veterinaria y servicios</p>
+        </div>
+        <button class="primary-btn" id="addApptBtn" type="button">+ Nueva cita</button>
+      </div>
+
+      <div class="appt-list" id="apptList">
+        <div class="loading-state">
+          <span class="loading-spinner"></span>
+          <p>Cargando citas…</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     BOTTOM NAV (móvil)
+══════════════════════════════════════════════ -->
+<nav class="bottom-nav" aria-label="Navegación móvil">
+  <button class="bottom-nav-item active" data-section="mascotas" type="button"><span>🐾</span><span>Mascotas</span></button>
+  <button class="bottom-nav-item" data-section="recordatorios" type="button"><span>🔔</span><span>Recordatorios</span></button>
+  <button class="bottom-nav-item" data-section="salud" type="button"><span>❤️</span><span>Salud</span></button>
+  <button class="bottom-nav-item" data-section="citas" type="button"><span>📅</span><span>Citas</span></button>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     MODAL — AÑADIR MASCOTA
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="petModal" role="dialog" aria-modal="true">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="petModalTitle">Nueva mascota</h3>
+      <button class="icon-btn" id="closePetModal" type="button">✕</button>
+    </div>
+    <form class="modal-form" id="petForm" novalidate>
+      <input type="hidden" id="petId" name="id" />
+
+      <!-- Foto -->
+      <div class="photo-upload" id="photoUpload">
+        <div class="photo-preview" id="photoPreview">
+          <span class="photo-placeholder" id="photoPlaceholder">🐾</span>
+          <img id="photoImg" src="" alt="Foto mascota" hidden />
+        </div>
+        <div class="photo-actions">
+          <label class="secondary-btn photo-label" for="photoInput">📷 Subir foto</label>
+          <input type="file" id="photoInput" accept="image/*" hidden />
+          <p>JPG, PNG o WebP · máx 5 MB</p>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pName">Nombre *</label>
+          <input type="text" id="pName" name="name" placeholder="Ej: Luna" required />
+        </div>
+        <div class="form-group">
+          <label for="pType">Tipo *</label>
+          <select id="pType" name="type" required>
+            <option value="perro">🐕 Perro</option>
+            <option value="gato">🐈 Gato</option>
+            <option value="ave">🦜 Ave</option>
+            <option value="conejo">🐇 Conejo</option>
+            <option value="pez">🐠 Pez</option>
+            <option value="otro">🐾 Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pBreed">Raza</label>
+          <input type="text" id="pBreed" name="breed" placeholder="Ej: Golden Retriever" />
+        </div>
+        <div class="form-group">
+          <label for="pAge">Edad (años)</label>
+          <input type="number" id="pAge" name="age_years" placeholder="Ej: 3" min="0" step="0.5" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pWeight">Peso (kg)</label>
+          <input type="number" id="pWeight" name="weight_kg" placeholder="Ej: 18.4" min="0" step="0.1" />
+        </div>
+        <div class="form-group">
+          <label for="pDiet">Dieta</label>
+          <input type="text" id="pDiet" name="diet" placeholder="Ej: Alta proteína" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pNotes">Notas</label>
+        <input type="text" id="pNotes" name="notes" placeholder="Alergias, condiciones especiales…" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="primary-btn" type="submit" id="savePetBtn">
+          <span class="btn-text">Guardar</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <button class="ghost-btn" type="button" id="cancelPetModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL — RECORDATORIO
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="reminderModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nuevo recordatorio</h3>
+      <button class="icon-btn" id="closeReminderModal" type="button">✕</button>
+    </div>
+    <form class="modal-form" id="reminderForm" novalidate>
+      <div class="form-group">
+        <label for="rPet">Mascota</label>
+        <select id="rPet" name="pet_id">
+          <option value="">Sin mascota específica</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rType">Tipo</label>
+          <select id="rType" name="type">
+            <option value="comida">🍗 Comida</option>
+            <option value="agua">💧 Agua</option>
+            <option value="paseo">🦮 Paseo</option>
+            <option value="bano">🛁 Baño</option>
+            <option value="medicamento">💊 Medicamento</option>
+            <option value="vacuna">💉 Vacuna</option>
+            <option value="cita">📅 Cita</option>
+            <option value="otro">🔔 Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rTime">Hora</label>
+          <input type="time" id="rTime" name="time_of_day" value="08:00" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="rTitle">Título</label>
+        <input type="text" id="rTitle" name="title" placeholder="Ej: Desayuno de Luna" required />
+      </div>
+      <div class="form-group">
+        <label for="rFreq">Frecuencia</label>
+        <select id="rFreq" name="frequency">
+          <option value="diario">Diario</option>
+          <option value="semanal">Semanal</option>
+          <option value="mensual">Mensual</option>
+          <option value="unico">Una sola vez</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="primary-btn" type="submit" id="saveReminderBtn">
+          <span class="btn-text">Guardar</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <button class="ghost-btn" type="button" id="cancelReminderModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL — REGISTRO DE SALUD
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="healthModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Registro de salud</h3>
+      <button class="icon-btn" id="closeHealthModal" type="button">✕</button>
+    </div>
+    <form class="modal-form" id="healthForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hPet">Mascota *</label>
+          <select id="hPet" name="pet_id" required>
+            <option value="">Seleccionar…</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="hType">Tipo *</label>
+          <select id="hType" name="type" required>
+            <option value="peso">⚖️ Peso</option>
+            <option value="consulta">🩺 Consulta</option>
+            <option value="cirugia">🔬 Cirugía</option>
+            <option value="examen">📋 Examen</option>
+            <option value="otro">📝 Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hValue">Valor (peso en kg, etc.)</label>
+          <input type="number" id="hValue" name="value" placeholder="Ej: 18.4" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label for="hDate">Fecha *</label>
+          <input type="date" id="hDate" name="date" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="hVet">Veterinario</label>
+          <input type="text" id="hVet" name="vet_name" placeholder="Dr. García" />
+        </div>
+        <div class="form-group">
+          <label for="hClinic">Clínica</label>
+          <input type="text" id="hClinic" name="clinic" placeholder="Vet Norte" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="hNotes">Notas</label>
+        <input type="text" id="hNotes" name="notes" placeholder="Observaciones…" />
+      </div>
+      <div class="modal-actions">
+        <button class="primary-btn" type="submit" id="saveHealthBtn">
+          <span class="btn-text">Guardar</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <button class="ghost-btn" type="button" id="cancelHealthModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL — CITA
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="apptModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Nueva cita</h3>
+      <button class="icon-btn" id="closeApptModal" type="button">✕</button>
+    </div>
+    <form class="modal-form" id="apptForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="aPet">Mascota</label>
+          <select id="aPet" name="pet_id">
+            <option value="">Sin mascota específica</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="aType">Tipo</label>
+          <select id="aType" name="type">
+            <option value="consulta">🩺 Consulta</option>
+            <option value="vacuna">💉 Vacuna</option>
+            <option value="cirugia">🔬 Cirugía</option>
+            <option value="estetica">✂️ Estética</option>
+            <option value="otro">📝 Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aTitle">Título *</label>
+        <input type="text" id="aTitle" name="title" placeholder="Ej: Vacuna anual Luna" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="aDate">Fecha y hora *</label>
+          <input type="datetime-local" id="aDate" name="date" required />
+        </div>
+        <div class="form-group">
+          <label for="aClinic">Clínica</label>
+          <input type="text" id="aClinic" name="clinic" placeholder="Vet Norte" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="aVet">Veterinario</label>
+        <input type="text" id="aVet" name="vet_name" placeholder="Dr. García" />
+      </div>
+      <div class="modal-actions">
+        <button class="primary-btn" type="submit" id="saveApptBtn">
+          <span class="btn-text">Guardar</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <button class="ghost-btn" type="button" id="cancelApptModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>
