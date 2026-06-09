@@ -270,8 +270,60 @@
 
 .label-hint { font-size: 0.68rem; color: var(--text-3); font-weight: 400; }
 
+/* ── Social login ──────────────────────────────── */
+.social-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin-bottom: 0.85rem;
+}
+
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+.social-btn:hover {
+  border-color: var(--border-hi);
+  color: var(--text);
+  background: var(--surface-hi);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+.social-btn.facebook-btn:hover { border-color: #1877F2; color: #1877F2; }
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.social-divider::before,
+.social-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 @media (max-width: 480px) {
   .auth-card { padding: 1.5rem; }
   .auth-back { top: 0.75rem; left: 0.75rem; font-size: 0.75rem; padding: 0.35rem 0.7rem; }
   .role-selector { grid-template-columns: 1fr 1fr; }
+  .social-btns { grid-template-columns: 1fr; }
 }

@@ -1,5 +1,5 @@
 /* FIRU · Login page logic */
-import { signIn, signUp, getSession, onAuthChange } from './auth.js';
+import { signIn, signUp, getSession, onAuthChange, signInWithGoogle, signInWithFacebook } from './auth.js';
 
 const $ = s => document.querySelector(s);
 
@@ -134,6 +134,17 @@ $('#registerForm').addEventListener('submit', async e => {
   } finally {
     setLoading(btn, false);
   }
+});
+
+/* ── Login social ─────────────────────────────── */
+$('#googleBtn')?.addEventListener('click', async () => {
+  try { await signInWithGoogle(); }
+  catch (_) { showMsg('No se pudo conectar con Google. Intenta de nuevo.'); }
+});
+
+$('#facebookBtn')?.addEventListener('click', async () => {
+  try { await signInWithFacebook(); }
+  catch (_) { showMsg('No se pudo conectar con Facebook. Intenta de nuevo.'); }
 });
 
 /* ── Olvidé contraseña ────────────────────────── */

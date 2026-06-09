@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFBF5" />
+  <title>FIRU · Iniciando sesión…</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="login.css" />
+  <style>
+    .cb-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(255,107,107,0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 70% at 90% 80%, rgba(0,201,167,0.08) 0%, transparent 55%),
+        var(--bg);
+    }
+    .cb-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 2rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .cb-logo strong { font-size: 1.35rem; font-weight: 800; letter-spacing: 0.04em; }
+    .cb-card {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+    .cb-card h2 { margin-bottom: 0.4rem; font-size: 1.4rem; }
+    .cb-card > p { color: var(--text-3); font-size: 0.88rem; margin-bottom: 2rem; }
+    .cb-spinner {
+      width: 2.8rem;
+      height: 2.8rem;
+      border: 3px solid var(--border);
+      border-top-color: var(--coral);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+      margin: 0 auto 1.25rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .cb-role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .cb-role-card {
+      padding: 1.1rem;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--r-lg);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .cb-role-card:hover { border-color: var(--coral); background: var(--coral-alpha); }
+    .cb-role-card.active { border-color: var(--coral); background: var(--coral-alpha); box-shadow: 0 4px 16px var(--coral-glow); }
+    .cb-role-card .role-emoji { font-size: 1.8rem; display: block; margin-bottom: 0.2rem; }
+    .cb-role-card strong { font-size: 0.88rem; display: block; }
+    .cb-role-card span { font-size: 0.75rem; color: var(--text-3); }
+    .cb-continue { width: 100%; justify-content: center; }
+    .cb-error-icon { font-size: 3rem; display: block; margin-bottom: 0.75rem; }
+    @media (max-width: 380px) { .cb-role-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<div class="cb-wrap">
+
+  <a href="index.html" class="cb-logo">
+    <div class="brand-mark">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#FF6B6B" opacity="0.2"/>
+        <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#6C63FF"/>
+        <circle cx="26" cy="29" r="2" fill="#1A1340"/>
+        <circle cx="38" cy="29" r="2" fill="#1A1340"/>
+        <path d="M29 34c2 2 4 2 6 0" stroke="#1A1340" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <strong>FIRU</strong>
+  </a>
+
+  <!-- Estado: cargando -->
+  <div class="cb-card" id="stateLoading">
+    <div class="cb-spinner"></div>
+    <h2>Iniciando sesión…</h2>
+    <p>Un momento, verificando tu cuenta</p>
+  </div>
+
+  <!-- Estado: selección de rol (nuevos usuarios) -->
+  <div class="cb-card" id="stateRole" hidden>
+    <h2>¡Bienvenido/a a FIRU! 🐾</h2>
+    <p>¿Cómo usarás la app? Elige para personalizar tu experiencia</p>
+
+    <div class="cb-role-grid">
+      <div class="cb-role-card active" data-role="owner" tabindex="0" role="button">
+        <input type="radio" name="cbRole" value="owner" checked hidden />
+        <span class="role-emoji">🐾</span>
+        <strong>Soy dueño/a</strong>
+        <span>Registro y cuido mis mascotas</span>
+      </div>
+      <div class="cb-role-card" data-role="business" tabindex="0" role="button">
+        <input type="radio" name="cbRole" value="business" hidden />
+        <span class="role-emoji">🏥</span>
+        <strong>Tengo un negocio</strong>
+        <span>Clínica, tienda o servicio</span>
+      </div>
+    </div>
+
+    <button class="primary-btn cb-continue" id="continueBtn" type="button">
+      <span class="btn-text">Continuar →</span>
+      <span class="btn-loader" hidden>···</span>
+    </button>
+  </div>
+
+  <!-- Estado: error -->
+  <div class="cb-card" id="stateError" hidden>
+    <span class="cb-error-icon">😕</span>
+    <h2>Algo salió mal</h2>
+    <p>No pudimos completar el inicio de sesión con la red social</p>
+    <a href="login.html" class="primary-btn" style="display:inline-flex;text-decoration:none;margin-top:0.5rem">
+      ← Volver al login
+    </a>
+  </div>
+
+</div>
+<script type="module" src="oauth-callback.js"></script>
+</body>
+</html>
