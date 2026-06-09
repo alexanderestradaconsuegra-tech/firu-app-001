@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFBF5" />
+  <title>FIRU · Entrar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-shell">
+
+    <!-- Decoración de fondo -->
+    <div class="auth-bg" aria-hidden="true">
+      <span>🐕</span><span>🐈</span><span>🦜</span><span>🐇</span>
+      <span>🐾</span><span>🐠</span><span>🐕</span><span>🐈</span>
+      <span>🦴</span><span>⭐</span><span>🐾</span><span>🌿</span>
+    </div>
+
+    <!-- Volver al inicio -->
+    <a href="index.html" class="auth-back">
+      ← Volver a FIRU
+    </a>
+
+    <!-- Card de autenticación -->
+    <div class="auth-card card">
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <div class="brand-mark">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#FF6B6B" opacity="0.2"/>
+            <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#6C63FF"/>
+            <circle cx="26" cy="29" r="2" fill="#1A1340"/>
+            <circle cx="38" cy="29" r="2" fill="#1A1340"/>
+            <path d="M29 34c2 2 4 2 6 0" stroke="#1A1340" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <div>
+          <strong class="auth-brand-name">FIRU</strong>
+          <p>Mascotas domésticas con estándar premium</p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs" role="tablist">
+        <button class="auth-tab active" data-tab="login" role="tab" type="button">Entrar</button>
+        <button class="auth-tab" data-tab="register" role="tab" type="button">Registrarse</button>
+      </div>
+
+      <!-- Mensajes -->
+      <div class="auth-msg" id="authMsg" role="alert" aria-live="polite"></div>
+
+      <!-- ──── LOGIN ──── -->
+      <form class="auth-form" id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Correo electrónico</label>
+          <input type="email" id="loginEmail" name="email" placeholder="hola@ejemplo.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">
+            Contraseña
+            <a href="#" class="forgot-link" id="forgotLink">¿Olvidaste tu contraseña?</a>
+          </label>
+          <div class="input-wrap">
+            <input type="password" id="loginPassword" name="password" placeholder="••••••••" required autocomplete="current-password" />
+            <button type="button" class="eye-btn" data-target="loginPassword" aria-label="Mostrar contraseña">👁</button>
+          </div>
+        </div>
+        <button type="submit" class="primary-btn full" id="loginBtn">
+          <span class="btn-text">Entrar a FIRU</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <p class="auth-switch">¿No tienes cuenta? <button type="button" class="link-btn" data-switch="register">Regístrate gratis</button></p>
+      </form>
+
+      <!-- ──── REGISTRO ──── -->
+      <form class="auth-form hidden" id="registerForm" novalidate>
+
+        <!-- Selector de rol -->
+        <div class="role-selector" role="group" aria-label="Tipo de cuenta">
+          <label class="role-card active" data-role="owner">
+            <input type="radio" name="role" value="owner" checked hidden />
+            <span class="role-emoji">🐾</span>
+            <div>
+              <strong>Soy dueño</strong>
+              <span>Registro y cuido mis mascotas</span>
+            </div>
+            <span class="role-check">✓</span>
+          </label>
+          <label class="role-card" data-role="business">
+            <input type="radio" name="role" value="business" hidden />
+            <span class="role-emoji">🏥</span>
+            <div>
+              <strong>Soy negocio</strong>
+              <span>Clínica, tienda o servicio</span>
+            </div>
+            <span class="role-check">✓</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="regName">Nombre completo</label>
+          <input type="text" id="regName" name="full_name" placeholder="Tu nombre" required autocomplete="name" />
+        </div>
+
+        <!-- Campos extra para negocio -->
+        <div class="business-fields" id="businessFields" hidden>
+          <div class="form-group">
+            <label for="bizName">Nombre del negocio</label>
+            <input type="text" id="bizName" name="biz_name" placeholder="Ej: Vet Norte" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bizType">Tipo</label>
+              <select id="bizType" name="biz_type">
+                <option value="clinica">Clínica veterinaria</option>
+                <option value="tienda">Tienda de mascotas</option>
+                <option value="servicio">Servicio (paseos, grooming…)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="bizPhone">Teléfono</label>
+              <input type="tel" id="bizPhone" name="biz_phone" placeholder="+1 555 0000" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="regEmail">Correo electrónico</label>
+          <input type="email" id="regEmail" name="email" placeholder="hola@ejemplo.com" required autocomplete="email" />
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Contraseña <span class="label-hint">mínimo 6 caracteres</span></label>
+          <div class="input-wrap">
+            <input type="password" id="regPassword" name="password" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+            <button type="button" class="eye-btn" data-target="regPassword" aria-label="Mostrar contraseña">👁</button>
+          </div>
+        </div>
+
+        <button type="submit" class="primary-btn full" id="registerBtn">
+          <span class="btn-text">Crear cuenta gratis</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+        <p class="auth-switch">¿Ya tienes cuenta? <button type="button" class="link-btn" data-switch="login">Entra aquí</button></p>
+        <p class="auth-terms">Al registrarte aceptas los <a href="#">Términos de uso</a> y la <a href="#">Política de privacidad</a> de FIRU.</p>
+      </form>
+
+    </div>
+
+  </div>
+
+  <script type="module" src="login.js"></script>
+</body>
+</html>

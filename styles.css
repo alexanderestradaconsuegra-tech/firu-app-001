@@ -318,6 +318,22 @@ button, a { font-family: var(--font); cursor: pointer; transition: all 0.2s var(
 .menu-btn.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
+/* User pill (logged in) */
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-hi);
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  padding: 0.3rem 0.5rem 0.3rem 0.4rem;
+  box-shadow: var(--shadow-sm);
+}
+.user-avatar { font-size: 1.1rem; line-height: 1; }
+.user-name { font-size: 0.8rem; font-weight: 600; color: var(--text); max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.logout-btn { padding: 0.2rem 0.4rem; font-size: 0.85rem; color: var(--text-3); }
+.logout-btn:hover { color: var(--danger); background: rgba(255,71,87,0.08); border-radius: var(--r-sm); }
+
 .mobile-nav {
   display: none;
   flex-direction: column;

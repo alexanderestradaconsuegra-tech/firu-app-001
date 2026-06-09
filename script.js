@@ -1,5 +1,37 @@
 /* FIRU · Interactive layer */
 import { supabase } from './supabase.js';
+import { signOut, onAuthChange } from './auth.js';
+
+/* ================================================================
+   Auth state — nav
+   ================================================================ */
+const authNav = document.getElementById('authNav');
+
+function renderAuthNav(session) {
+  if (!authNav) return;
+  if (session?.user) {
+    const name  = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+    const role  = session.user.user_metadata?.role || 'owner';
+    const label = role === 'business' ? '🏥' : '🐾';
+    authNav.innerHTML = `
+      <div class="user-pill">
+        <span class="user-avatar">${label}</span>
+        <span class="user-name">${name}</span>
+        <button class="ghost-btn logout-btn" id="logoutBtn" type="button" title="Cerrar sesión">↩</button>
+      </div>
+    `;
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+      await signOut();
+      renderAuthNav(null);
+      toast('Sesión cerrada. ¡Hasta pronto!', 'info', '👋');
+    });
+  } else {
+    authNav.innerHTML = `<a class="primary-btn" href="login.html">Entrar</a>`;
+  }
+}
+
+onAuthChange(session => renderAuthNav(session));
+supabase.auth.getSession().then(({ data }) => renderAuthNav(data.session));
 
 const $ = (s, ctx = document) => ctx.querySelector(s);
 const $$ = (s, ctx = document) => [...ctx.querySelectorAll(s)];
