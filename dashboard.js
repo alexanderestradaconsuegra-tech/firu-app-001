@@ -120,7 +120,7 @@ function buildPetCard(pet) {
   const chip  = petChips[pet.type]  || '';
   const label = petLabels[pet.type] || 'Otro';
   const url   = pet.photo_url
-    ? `${supabase.storageUrl}/object/public/pet-photos/${pet.photo_url}`
+    ? `${supabase.storageUrl}/storage/v1/object/public/pet-photos/${pet.photo_url}`
     : null;
 
   const card  = document.createElement('article');
@@ -207,7 +207,7 @@ function openPetModal(pet = null) {
 
   const preview = $('#photoImg');
   if (pet?.photo_url) {
-    preview.src = `${supabase.storageUrl}/object/public/pet-photos/${pet.photo_url}`;
+    preview.src = `${supabase.storageUrl}/storage/v1/object/public/pet-photos/${pet.photo_url}`;
     preview.hidden = false;
     $('#photoPlaceholder').hidden = true;
   } else {
@@ -225,13 +225,16 @@ function closePetModal() {
   document.body.style.overflow = '';
 }
 
-$('#addPetBtn').addEventListener('click',    () => openPetModal());
-$('#closePetModal').addEventListener('click', closePetModal);
-$('#cancelPetModal').addEventListener('click', closePetModal);
-$('#petModal').addEventListener('click', e => { if (e.target === $('#petModal')) closePetModal(); });
+$('#addPetBtn')?.addEventListener('click',    () => openPetModal());
+$('#closePetModal')?.addEventListener('click', closePetModal);
+$('#cancelPetModal')?.addEventListener('click', closePetModal);
+$('#petModal')?.addEventListener('click', e => { if (e.target === $('#petModal')) closePetModal(); });
+
+/* Clic en la foto preview también abre el selector */
+$('#photoPreview')?.addEventListener('click', () => $('#photoInput').click());
 
 /* Preview foto */
-$('#photoInput').addEventListener('change', e => {
+$('#photoInput')?.addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
@@ -244,13 +247,13 @@ $('#photoInput').addEventListener('change', e => {
   $('#pType').dispatchEvent(new Event('change'));
 });
 
-$('#pType').addEventListener('change', () => {
+$('#pType')?.addEventListener('change', () => {
   if (!$('#photoImg').hidden) return;
   $('#photoPlaceholder').textContent = petEmojis[$('#pType').value] || '🐾';
 });
 
 /* Guardar mascota */
-$('#petForm').addEventListener('submit', async e => {
+$('#petForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const btn = $('#savePetBtn');
   setLoading(btn, true);
@@ -368,22 +371,22 @@ function reminderRowHtml(r) {
     </div>`;
 }
 
-$('#addReminderBtn').addEventListener('click', () => {
-  $('#reminderForm').reset();
-  $('#rTime').value = '08:00';
-  $('#reminderModal').classList.add('open');
+$('#addReminderBtn')?.addEventListener('click', () => {
+  $('#reminderForm')?.reset();
+  if ($('#rTime')) $('#rTime').value = '08:00';
+  $('#reminderModal')?.classList.add('open');
   document.body.style.overflow = 'hidden';
 });
-$('#closeReminderModal').addEventListener('click', closeReminderModal);
-$('#cancelReminderModal').addEventListener('click', closeReminderModal);
-$('#reminderModal').addEventListener('click', e => { if (e.target === $('#reminderModal')) closeReminderModal(); });
+$('#closeReminderModal')?.addEventListener('click', closeReminderModal);
+$('#cancelReminderModal')?.addEventListener('click', closeReminderModal);
+$('#reminderModal')?.addEventListener('click', e => { if (e.target === $('#reminderModal')) closeReminderModal(); });
 
 function closeReminderModal() {
   $('#reminderModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-$('#reminderForm').addEventListener('submit', async e => {
+$('#reminderForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const btn = $('#saveReminderBtn');
   setLoading(btn, true);
@@ -409,13 +412,13 @@ $('#reminderForm').addEventListener('submit', async e => {
 });
 
 /* Auto-título recordatorio */
-$('#rType').addEventListener('change', () => {
+$('#rType')?.addEventListener('change', () => {
   const pet   = $('#rPet').options[$('#rPet').selectedIndex]?.text || '';
   const label = $('#rType').options[$('#rType').selectedIndex]?.text.split(' ').slice(1).join(' ') || '';
   const petName = pet !== 'Sin mascota específica' ? ` de ${pet}` : '';
   $('#rTitle').value = label + petName;
 });
-$('#rPet').addEventListener('change', () => $('#rType').dispatchEvent(new Event('change')));
+$('#rPet')?.addEventListener('change', () => $('#rType')?.dispatchEvent(new Event('change')));
 
 /* ════════════════════════════════════════════
    SALUD
@@ -453,23 +456,23 @@ function renderHealthTimeline(records, pet) {
     </div>`).join('')}</div>`;
 }
 
-$('#addHealthBtn').addEventListener('click', () => {
-  $('#healthForm').reset();
-  $('#hDate').value = new Date().toISOString().split('T')[0];
-  if (selectedHealthPetId) $('#hPet').value = selectedHealthPetId;
-  $('#healthModal').classList.add('open');
+$('#addHealthBtn')?.addEventListener('click', () => {
+  $('#healthForm')?.reset();
+  if ($('#hDate')) $('#hDate').value = new Date().toISOString().split('T')[0];
+  if (selectedHealthPetId && $('#hPet')) $('#hPet').value = selectedHealthPetId;
+  $('#healthModal')?.classList.add('open');
   document.body.style.overflow = 'hidden';
 });
-$('#closeHealthModal').addEventListener('click', closeHealthModal);
-$('#cancelHealthModal').addEventListener('click', closeHealthModal);
-$('#healthModal').addEventListener('click', e => { if (e.target === $('#healthModal')) closeHealthModal(); });
+$('#closeHealthModal')?.addEventListener('click', closeHealthModal);
+$('#cancelHealthModal')?.addEventListener('click', closeHealthModal);
+$('#healthModal')?.addEventListener('click', e => { if (e.target === $('#healthModal')) closeHealthModal(); });
 
 function closeHealthModal() {
   $('#healthModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-$('#healthForm').addEventListener('submit', async e => {
+$('#healthForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const btn = $('#saveHealthBtn');
   setLoading(btn, true);
@@ -533,24 +536,24 @@ function renderAppointments(appts) {
   }).join('');
 }
 
-$('#addApptBtn').addEventListener('click', () => {
-  $('#apptForm').reset();
+$('#addApptBtn')?.addEventListener('click', () => {
+  $('#apptForm')?.reset();
   const now = new Date();
   now.setMinutes(0);
-  $('#aDate').value = now.toISOString().slice(0,16);
-  $('#apptModal').classList.add('open');
+  if ($('#aDate')) $('#aDate').value = now.toISOString().slice(0,16);
+  $('#apptModal')?.classList.add('open');
   document.body.style.overflow = 'hidden';
 });
-$('#closeApptModal').addEventListener('click', closeApptModal);
-$('#cancelApptModal').addEventListener('click', closeApptModal);
-$('#apptModal').addEventListener('click', e => { if (e.target === $('#apptModal')) closeApptModal(); });
+$('#closeApptModal')?.addEventListener('click', closeApptModal);
+$('#cancelApptModal')?.addEventListener('click', closeApptModal);
+$('#apptModal')?.addEventListener('click', e => { if (e.target === $('#apptModal')) closeApptModal(); });
 
 function closeApptModal() {
   $('#apptModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
-$('#apptForm').addEventListener('submit', async e => {
+$('#apptForm')?.addEventListener('submit', async e => {
   e.preventDefault();
   const btn = $('#saveApptBtn');
   setLoading(btn, true);
