@@ -12,81 +12,110 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 64 64" role="img" aria-label="Logo FIRU" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#00FFD4" opacity="0.18"/>
-            <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#5465FF"/>
-            <circle cx="26" cy="29" r="2" fill="#050208"/>
-            <circle cx="38" cy="29" r="2" fill="#050208"/>
-            <path d="M29 34c2 2 4 2 6 0" stroke="#050208" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-          </svg>
+<div class="page-shell">
+
+  <!-- ============================================================
+       TOPBAR
+       ============================================================ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" role="img" aria-label="Logo FIRU" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#00FFD4" opacity="0.18"/>
+          <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#5465FF"/>
+          <circle cx="26" cy="29" r="2" fill="#050208"/>
+          <circle cx="38" cy="29" r="2" fill="#050208"/>
+          <path d="M29 34c2 2 4 2 6 0" stroke="#050208" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+      <div>
+        <span class="eyebrow">FIRU</span>
+        <h1>Mascotas domésticas, operadas con estándar premium.</h1>
+      </div>
+    </div>
+
+    <nav class="top-actions" aria-label="Navegación principal">
+      <a class="ghost-btn" href="#mascotas">Mascotas</a>
+      <a class="ghost-btn" href="#recordatorios">Recordatorios</a>
+      <a class="ghost-btn" href="#directorios">Directorio</a>
+      <a class="primary-btn" href="#mascotas">Abrir panel</a>
+    </nav>
+
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Menú móvil" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile nav -->
+  <nav class="mobile-nav" id="mobileNav" aria-label="Menú móvil">
+    <a href="#mascotas">Mascotas</a>
+    <a href="#recordatorios">Recordatorios</a>
+    <a href="#directorios">Directorio</a>
+    <a href="#integraciones">Integraciones</a>
+  </nav>
+
+  <main>
+
+    <!-- ==========================================================
+         HERO
+         ========================================================== -->
+    <section class="hero card">
+      <div class="hero-copy">
+        <span class="pill">Gratis para familias · Monetización para clínicas y tiendas</span>
+        <h2>Control total de salud, rutinas y soporte para cada mascota.</h2>
+        <p>
+          FIRU organiza vacunas, peso, edad, dietas, emergencias, citas y recordatorios
+          en una experiencia móvil-first, lista para crecer con n8n, Supabase y automatizaciones reales.
+        </p>
+        <div class="hero-metrics">
+          <article>
+            <strong>24/7</strong>
+            <span>recordatorios activos</span>
+          </article>
+          <article>
+            <strong>5 min</strong>
+            <span>configuración inicial</span>
+          </article>
+          <article>
+            <strong>Free + Pro</strong>
+            <span>familiar y comercial</span>
+          </article>
         </div>
-        <div>
-          <span class="eyebrow">FIRU</span>
-          <h1>Mascotas domésticas, operadas con estándar premium.</h1>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#recordatorios">Ver tareas</a>
+          <a class="secondary-btn" href="#integraciones">Ver integraciones</a>
         </div>
       </div>
-      <nav class="top-actions" aria-label="Acciones rápidas">
-        <a class="ghost-btn" href="#mascotas">Mascotas</a>
-        <a class="ghost-btn" href="#recordatorios">Recordatorios</a>
-        <a class="primary-btn" href="#directorios">Abrir panel</a>
-      </nav>
-    </header>
 
-    <main>
-      <section class="hero card">
-        <div class="hero-copy">
-          <span class="pill">Gratis para familias · Monetización para clínicas y tiendas</span>
-          <h2>Control total de salud, rutinas y soporte para cada mascota.</h2>
-          <p>
-            FIRU organiza vacunas, peso, edad, dietas, emergencias, citas y recordatorios del dueño en una experiencia móvil-first,
-            lista para crecer con n8n, Supabase y automatizaciones reales.
-          </p>
-          <div class="hero-metrics">
-            <article>
-              <strong>24/7</strong>
-              <span>recordatorios activos</span>
-            </article>
-            <article>
-              <strong>5 min</strong>
-              <span>configuración inicial</span>
-            </article>
-            <article>
-              <strong>Free + Pro</strong>
-              <span>modelo familiar y comercial</span>
-            </article>
-          </div>
-          <div class="hero-actions">
-            <a class="primary-btn" href="#recordatorios">Ver tareas</a>
-            <a class="secondary-btn" href="#integraciones">Ver integraciones</a>
-          </div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="phone-frame">
-            <div class="phone-screen">
-              <div class="phone-notch"></div>
-              <div class="mini-head">
-                <span>Hoy</span>
-                <strong>2 alertas</strong>
-              </div>
-              <div class="mini-card highlight">
-                <p>Paseo de Luna</p>
-                <strong>19:00 · 25 min</strong>
-              </div>
-              <div class="mini-card">
-                <p>Medicamento</p>
-                <strong>08:00 · con comida</strong>
-              </div>
-              <div class="mini-wave"></div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="mini-head">
+              <span id="phoneClock">--:--</span>
+              <strong>2 alertas</strong>
             </div>
+            <div class="mini-card highlight">
+              <p>Paseo de Luna</p>
+              <strong>19:00 · 25 min</strong>
+              <div class="mini-badge"><span>🐕 Luna</span><span>Activo</span></div>
+            </div>
+            <div class="mini-card">
+              <p>Medicamento Milo</p>
+              <strong>08:00 · con comida</strong>
+              <div class="mini-badge"><span>🐈 Milo</span><span>Pendiente</span></div>
+            </div>
+            <div class="mini-wave"></div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="mascotas" class="grid-section">
+    <!-- ==========================================================
+         MASCOTAS
+         ========================================================== -->
+    <section id="mascotas" class="grid-section">
+      <div class="section-header">
         <div class="section-title">
           <div>
             <span class="eyebrow">Mascotas</span>
@@ -94,165 +123,353 @@
           </div>
           <p>Diseñado para perros, gatos y otras mascotas domésticas con lectura rápida y acciones directas.</p>
         </div>
-
-        <div class="pet-grid" id="petGrid">
-          <article class="pet-card card" data-pet="perro">
-            <div class="pet-top">
-              <div>
-                <span class="chip">Perro</span>
-                <h4>Luna</h4>
-              </div>
-              <span class="status good">Al día</span>
-            </div>
-            <ul>
-              <li><span>Edad</span><strong>4 años</strong></li>
-              <li><span>Peso</span><strong>18.4 kg</strong></li>
-              <li><span>Vacunas</span><strong>Próxima: Rabia</strong></li>
-              <li><span>Dieta</span><strong>Alta proteína</strong></li>
-            </ul>
-          </article>
-
-          <article class="pet-card card" data-pet="gato">
-            <div class="pet-top">
-              <div>
-                <span class="chip alt">Gato</span>
-                <h4>Milo</h4>
-              </div>
-              <span class="status warning">Pendiente</span>
-            </div>
-            <ul>
-              <li><span>Edad</span><strong>2 años</strong></li>
-              <li><span>Peso</span><strong>4.9 kg</strong></li>
-              <li><span>Vacunas</span><strong>Refuerzo en 12 días</strong></li>
-              <li><span>Dieta</span><strong>Control urinario</strong></li>
-            </ul>
-          </article>
-
-          <article class="pet-card card" data-pet="otro">
-            <div class="pet-top">
-              <div>
-                <span class="chip cyan">Ave</span>
-                <h4>Nube</h4>
-              </div>
-              <span class="status good">Estable</span>
-            </div>
-            <ul>
-              <li><span>Edad</span><strong>11 meses</strong></li>
-              <li><span>Peso</span><strong>420 g</strong></li>
-              <li><span>Chequeo</span><strong>Mensual</strong></li>
-              <li><span>Dieta</span><strong>Semillas + fruta</strong></li>
-            </ul>
-          </article>
+        <div class="pet-filters" role="group" aria-label="Filtrar mascotas">
+          <button class="filter-btn active" data-filter="all" type="button">Todos</button>
+          <button class="filter-btn" data-filter="perro" type="button">Perros</button>
+          <button class="filter-btn" data-filter="gato"  type="button">Gatos</button>
+          <button class="filter-btn" data-filter="otro"  type="button">Otros</button>
         </div>
-      </section>
+        <button class="primary-btn" id="addPetBtn" type="button">+ Añadir mascota</button>
+      </div>
 
-      <section id="recordatorios" class="split-section">
-        <div class="card reminder-panel">
-          <div class="section-title compact">
+      <div class="pet-grid" id="petGrid">
+
+        <article class="pet-card card reveal" data-pet="perro">
+          <div class="pet-emoji">🐕</div>
+          <div class="pet-top">
             <div>
-              <span class="eyebrow">Recordatorios</span>
-              <h3>Notificación visual y sonora estilo mensaje</h3>
+              <span class="chip">Perro</span>
+              <h4>Luna</h4>
+            </div>
+            <span class="status good">Al día</span>
+          </div>
+          <ul>
+            <li><span>Edad</span><strong>4 años</strong></li>
+            <li><span>Peso</span><strong>18.4 kg</strong></li>
+            <li><span>Vacunas</span><strong>Próxima: Rabia</strong></li>
+            <li><span>Dieta</span><strong>Alta proteína</strong></li>
+          </ul>
+          <div class="pet-health-bar">
+            <label><span>Salud general</span><span>92%</span></label>
+            <div class="progress-track">
+              <div class="progress-fill" data-width="92%"></div>
             </div>
           </div>
-          <div class="alert-banner" role="status">
-            <span class="pulse"></span>
-            <div>
-              <strong>Mensaje FIRU</strong>
-              <p>Es hora del paseo de Luna. Nivel de energía alto.</p>
-            </div>
-            <button class="icon-btn" id="playTone" type="button">▶</button>
+          <div class="pet-card-actions">
+            <button class="ghost-btn" type="button">Editar</button>
+            <button class="ghost-btn" type="button">Recordatorio</button>
           </div>
-          <div class="reminder-list">
-            <button class="reminder-item active" type="button">Comida · 08:00</button>
-            <button class="reminder-item" type="button">Agua · cada 3 h</button>
-            <button class="reminder-item" type="button">Paseo · 19:00</button>
-            <button class="reminder-item" type="button">Baño · sábado</button>
-            <button class="reminder-item" type="button">Medicamento · 08:00</button>
-            <button class="reminder-item" type="button">Cita · 15 junio</button>
-          </div>
-        </div>
+        </article>
 
-        <div class="card health-panel">
-          <div class="section-title compact">
+        <article class="pet-card card reveal" data-pet="gato">
+          <div class="pet-emoji">🐈</div>
+          <div class="pet-top">
             <div>
-              <span class="eyebrow">Salud</span>
-              <h3>Lo crítico siempre primero</h3>
+              <span class="chip alt">Gato</span>
+              <h4>Milo</h4>
+            </div>
+            <span class="status warning">Pendiente</span>
+          </div>
+          <ul>
+            <li><span>Edad</span><strong>2 años</strong></li>
+            <li><span>Peso</span><strong>4.9 kg</strong></li>
+            <li><span>Vacunas</span><strong>Refuerzo en 12 días</strong></li>
+            <li><span>Dieta</span><strong>Control urinario</strong></li>
+          </ul>
+          <div class="pet-health-bar">
+            <label><span>Salud general</span><span>68%</span></label>
+            <div class="progress-track">
+              <div class="progress-fill warn" data-width="68%"></div>
             </div>
           </div>
-          <div class="health-stack">
-            <article>
-              <span>Vacunas</span>
-              <strong>Calendario + alertas automáticas</strong>
-            </article>
-            <article>
-              <span>Emergencias</span>
-              <strong>Clínicas cercanas, contacto rápido y geolocalización</strong>
-            </article>
-            <article>
-              <span>Historial</span>
-              <strong>Peso, apetito, conductas, tratamientos y notas</strong>
-            </article>
-            <article>
-              <span>Rutinas</span>
-              <strong>Comida, agua, baño y paseo con control simple</strong>
-            </article>
+          <div class="pet-card-actions">
+            <button class="ghost-btn" type="button">Editar</button>
+            <button class="ghost-btn" type="button">Recordatorio</button>
           </div>
-        </div>
-      </section>
+        </article>
 
-      <section id="directorios" class="grid-section">
-        <div class="section-title">
+        <article class="pet-card card reveal" data-pet="otro">
+          <div class="pet-emoji">🦜</div>
+          <div class="pet-top">
+            <div>
+              <span class="chip cyan">Ave</span>
+              <h4>Nube</h4>
+            </div>
+            <span class="status good">Estable</span>
+          </div>
+          <ul>
+            <li><span>Edad</span><strong>11 meses</strong></li>
+            <li><span>Peso</span><strong>420 g</strong></li>
+            <li><span>Chequeo</span><strong>Mensual</strong></li>
+            <li><span>Dieta</span><strong>Semillas + fruta</strong></li>
+          </ul>
+          <div class="pet-health-bar">
+            <label><span>Salud general</span><span>85%</span></label>
+            <div class="progress-track">
+              <div class="progress-fill" data-width="85%"></div>
+            </div>
+          </div>
+          <div class="pet-card-actions">
+            <button class="ghost-btn" type="button">Editar</button>
+            <button class="ghost-btn" type="button">Recordatorio</button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         RECORDATORIOS + SALUD
+         ========================================================== -->
+    <section id="recordatorios" class="split-section">
+
+      <div class="card reminder-panel">
+        <div class="section-title compact">
           <div>
-            <span class="eyebrow">Directorio</span>
-            <h3>Clínicas, tiendas e ingresos</h3>
+            <span class="eyebrow">Recordatorios</span>
+            <h3>Notificación visual y sonora</h3>
           </div>
-          <p>Modelo gratis para familias y panel premium para comercios con fichas destacadas y mensualidad.</p>
         </div>
 
-        <div class="directory-grid">
-          <article class="card directory-card">
-            <span class="chip teal">Clínica</span>
-            <h4>Vet Norte</h4>
-            <p>Urgencias 24/7 · Vacunación · Cirugía menor</p>
-            <strong>$29/mes</strong>
+        <div class="alert-banner" role="status" aria-live="polite">
+          <span class="pulse" aria-hidden="true"></span>
+          <div>
+            <strong id="alertTitle">Mensaje FIRU</strong>
+            <p id="alertText">Es hora del paseo de Luna. Nivel de energía alto.</p>
+          </div>
+          <button class="icon-btn" id="playTone" type="button" title="Reproducir tono FIRU" aria-label="Reproducir tono">▶</button>
+        </div>
+
+        <div class="reminder-list" role="list">
+          <button class="reminder-item active" type="button" role="listitem">Comida · 08:00</button>
+          <button class="reminder-item" type="button" role="listitem">Agua · cada 3 h</button>
+          <button class="reminder-item" type="button" role="listitem">Paseo · 19:00</button>
+          <button class="reminder-item" type="button" role="listitem">Baño · sábado</button>
+          <button class="reminder-item" type="button" role="listitem">Medicamento · 08:00</button>
+          <button class="reminder-item" type="button" role="listitem">Cita · 15 junio</button>
+        </div>
+      </div>
+
+      <div class="card health-panel">
+        <div class="section-title compact">
+          <div>
+            <span class="eyebrow">Salud</span>
+            <h3>Lo crítico siempre primero</h3>
+          </div>
+        </div>
+        <div class="health-stack">
+          <article>
+            <span>Vacunas</span>
+            <strong>Calendario automático + alertas con anticipación</strong>
           </article>
-          <article class="card directory-card">
-            <span class="chip alt">Tienda</span>
-            <h4>Casa Peluda</h4>
-            <p>Alimento premium · Accesorios · Delivery local</p>
-            <strong>$19/mes</strong>
+          <article>
+            <span>Emergencias</span>
+            <strong>Clínicas cercanas, contacto rápido y geolocalización</strong>
           </article>
-          <article class="card directory-card">
-            <span class="chip cyan">Servicios</span>
-            <h4>Dog Walker Pro</h4>
-            <p>Paseos programados · Evidencia fotográfica · Pago digital</p>
-            <strong>Comisión</strong>
+          <article>
+            <span>Historial</span>
+            <strong>Peso, apetito, conductas, tratamientos y notas médicas</strong>
+          </article>
+          <article>
+            <span>Rutinas</span>
+            <strong>Comida, agua, baño y paseo con control simple</strong>
           </article>
         </div>
-      </section>
+      </div>
 
-      <section id="integraciones" class="card integration-banner">
+    </section>
+
+    <!-- ==========================================================
+         DIRECTORIO
+         ========================================================== -->
+    <section id="directorios" class="grid-section">
+      <div class="section-title">
         <div>
-          <span class="eyebrow">Arquitectura</span>
-          <h3>Preparado para n8n + Supabase + EasyPanel</h3>
-          <p>
-            La primera versión ya deja listo el camino para autenticación, automatizaciones, base de datos,
-            webhooks y despliegue en contenedor.
-          </p>
+          <span class="eyebrow">Directorio</span>
+          <h3>Clínicas, tiendas e ingresos</h3>
         </div>
-        <ul>
-          <li>Supabase: usuarios, mascotas, recordatorios, directorio</li>
-          <li>n8n: notificaciones, automatización de citas, campañas</li>
-          <li>EasyPanel: despliegue por Docker sin fricción</li>
-        </ul>
-      </section>
-    </main>
+        <p>Modelo gratis para familias y panel premium para comercios con fichas destacadas y mensualidad.</p>
+      </div>
 
-    <footer class="footer">
-      <p>FIRU · VERSIÓN INICIAL · lista para GitHub y evolución a producción</p>
-    </footer>
+      <div class="search-row">
+        <input
+          type="search"
+          class="search-input"
+          id="dirSearch"
+          placeholder="Buscar clínicas, tiendas, servicios…"
+          aria-label="Buscar en el directorio"
+        />
+        <div class="dir-filters" role="group" aria-label="Filtrar directorio">
+          <button class="dir-filter-btn active" data-type="all"     type="button">Todos</button>
+          <button class="dir-filter-btn" data-type="clinica"  type="button">Clínicas</button>
+          <button class="dir-filter-btn" data-type="tienda"   type="button">Tiendas</button>
+          <button class="dir-filter-btn" data-type="servicio" type="button">Servicios</button>
+        </div>
+      </div>
+
+      <div class="directory-grid">
+
+        <article class="card directory-card reveal" data-type="clinica">
+          <span class="chip teal">Clínica</span>
+          <h4>Vet Norte</h4>
+          <div class="dir-rating">★★★★★ <span style="color:var(--text-3);margin-left:0.2rem">4.9 (128)</span></div>
+          <p>Urgencias 24/7 · Vacunación · Cirugía menor · Laboratorio</p>
+          <div class="dir-tags">
+            <span class="dir-tag">24/7</span>
+            <span class="dir-tag">Urgencias</span>
+            <span class="dir-tag">Cirugía</span>
+          </div>
+          <strong class="price">$29/mes</strong>
+        </article>
+
+        <article class="card directory-card reveal" data-type="tienda">
+          <span class="chip alt">Tienda</span>
+          <h4>Casa Peluda</h4>
+          <div class="dir-rating">★★★★☆ <span style="color:var(--text-3);margin-left:0.2rem">4.6 (87)</span></div>
+          <p>Alimento premium · Accesorios · Delivery local · Farmacia</p>
+          <div class="dir-tags">
+            <span class="dir-tag">Delivery</span>
+            <span class="dir-tag">Premium</span>
+          </div>
+          <strong class="price">$19/mes</strong>
+        </article>
+
+        <article class="card directory-card reveal" data-type="servicio">
+          <span class="chip cyan">Servicio</span>
+          <h4>Dog Walker Pro</h4>
+          <div class="dir-rating">★★★★★ <span style="color:var(--text-3);margin-left:0.2rem">4.8 (54)</span></div>
+          <p>Paseos programados · Evidencia fotográfica · Pago digital</p>
+          <div class="dir-tags">
+            <span class="dir-tag">GPS</span>
+            <span class="dir-tag">Fotos</span>
+            <span class="dir-tag">Seguro</span>
+          </div>
+          <strong class="price">Comisión</strong>
+        </article>
+
+        <article class="card directory-card reveal" data-type="servicio">
+          <span class="chip">Servicio</span>
+          <h4>Grooming Studio</h4>
+          <div class="dir-rating">★★★★☆ <span style="color:var(--text-3);margin-left:0.2rem">4.5 (43)</span></div>
+          <p>Baño y estética · Corte profesional · Spa para mascotas</p>
+          <div class="dir-tags">
+            <span class="dir-tag">Spa</span>
+            <span class="dir-tag">Estética</span>
+          </div>
+          <strong class="price">$19/mes</strong>
+        </article>
+
+        <article class="card directory-card reveal" data-type="clinica">
+          <span class="chip teal">Clínica</span>
+          <h4>Pet Salud Sur</h4>
+          <div class="dir-rating">★★★★★ <span style="color:var(--text-3);margin-left:0.2rem">4.7 (96)</span></div>
+          <p>Consulta general · Nutrición · Odontología veterinaria</p>
+          <div class="dir-tags">
+            <span class="dir-tag">Nutrición</span>
+            <span class="dir-tag">Dental</span>
+          </div>
+          <strong class="price">$29/mes</strong>
+        </article>
+
+        <article class="card directory-card reveal" data-type="tienda">
+          <span class="chip alt">Tienda</span>
+          <h4>BioNatural Pets</h4>
+          <div class="dir-rating">★★★★☆ <span style="color:var(--text-3);margin-left:0.2rem">4.4 (31)</span></div>
+          <p>Alimentos orgánicos · Suplementos · Juguetes ecológicos</p>
+          <div class="dir-tags">
+            <span class="dir-tag">Orgánico</span>
+            <span class="dir-tag">Natural</span>
+          </div>
+          <strong class="price">$19/mes</strong>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         INTEGRACIONES
+         ========================================================== -->
+    <section id="integraciones" class="card integration-banner">
+      <div>
+        <span class="eyebrow">Arquitectura</span>
+        <h3>Preparado para n8n + Supabase + EasyPanel</h3>
+        <p>
+          La primera versión ya deja listo el camino para autenticación, automatizaciones,
+          base de datos, webhooks y despliegue en contenedor sin fricción.
+        </p>
+      </div>
+      <ul>
+        <li>Supabase: usuarios, mascotas, recordatorios, directorio</li>
+        <li>n8n: notificaciones, automatización de citas, campañas</li>
+        <li>EasyPanel: despliegue por Docker sin fricción</li>
+        <li>Auth: magic link + OAuth listo para activar</li>
+        <li>Real-time: sincronización en vivo entre dispositivos</li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>FIRU · Versión 1.0 · Mascotas domésticas con estándar premium</p>
+    <nav class="footer-links">
+      <a href="#mascotas">Mascotas</a>
+      <a href="#recordatorios">Recordatorios</a>
+      <a href="#directorios">Directorio</a>
+    </nav>
+  </footer>
+
+</div>
+
+<!-- ADD PET MODAL -->
+<div class="modal-overlay" id="addPetModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Nueva mascota</h3>
+      <button class="icon-btn" id="closeModal" type="button" aria-label="Cerrar">✕</button>
+    </div>
+    <form class="modal-form" id="petForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="petName">Nombre</label>
+          <input type="text" id="petName" name="name" placeholder="Ej: Luna" required autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label for="petType">Tipo</label>
+          <select id="petType" name="type">
+            <option value="perro">Perro</option>
+            <option value="gato">Gato</option>
+            <option value="ave">Ave</option>
+            <option value="conejo">Conejo</option>
+            <option value="pez">Pez</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="petAge">Edad</label>
+          <input type="text" id="petAge" name="age" placeholder="Ej: 2 años" />
+        </div>
+        <div class="form-group">
+          <label for="petWeight">Peso (kg)</label>
+          <input type="number" id="petWeight" name="weight" placeholder="Ej: 4.5" min="0" step="0.1" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="petDiet">Dieta / Notas</label>
+        <input type="text" id="petDiet" name="diet" placeholder="Ej: Alta proteína, sin gluten…" />
+      </div>
+      <div class="modal-actions">
+        <button class="primary-btn" type="submit">Guardar mascota</button>
+        <button class="ghost-btn" type="button" id="cancelModal">Cancelar</button>
+      </div>
+    </form>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<!-- TOAST NOTIFICATIONS -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+<script src="script.js"></script>
 </body>
 </html>
