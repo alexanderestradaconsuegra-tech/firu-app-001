@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFBF5" />
+  <title>FIRU · Panel de negocio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="business.css" />
+</head>
+<body class="dash-body">
+
+<!-- HEADER -->
+<header class="dash-header">
+  <a href="index.html" class="dash-logo">
+    <div class="brand-mark sm">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 24c0-6 4-10 10-10s10 4 10 10c0 4-2 8-5 11 2 1 4 3 6 5 3 3 5 7 5 12 0 3-2 6-5 6H23c-3 0-5-3-5-6 0-5 2-9 5-12 2-2 4-4 6-5-3-3-5-7-5-11Z" fill="#FF6B6B" opacity="0.2"/>
+        <path d="M27 18c-2-5-6-8-10-8-3 0-5 2-5 5 0 4 3 7 7 9l8 4v-10Zm10 0c2-5 6-8 10-8 3 0 5 2 5 5 0 4-3 7-7 9l-8 4v-10ZM23 47c0-5 4-9 9-9h0c5 0 9 4 9 9v4H23v-4Z" fill="#6C63FF"/>
+        <circle cx="26" cy="29" r="2" fill="#1A1340"/>
+        <circle cx="38" cy="29" r="2" fill="#1A1340"/>
+        <path d="M29 34c2 2 4 2 6 0" stroke="#1A1340" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+    <strong>FIRU</strong>
+  </a>
+  <div class="biz-header-center">
+    <span class="plan-badge" id="planBadge">Free</span>
+    <span class="biz-name-header" id="bizNameHeader">Mi negocio</span>
+  </div>
+  <div class="dash-header-right">
+    <div class="user-pill">
+      <span class="user-avatar">🏥</span>
+      <span class="user-name" id="userName">Cargando…</span>
+      <button class="ghost-btn logout-btn" id="logoutBtn" type="button">↩</button>
+    </div>
+  </div>
+</header>
+
+<!-- SHELL -->
+<div class="dash-shell">
+
+  <!-- Sidebar -->
+  <aside class="dash-sidebar">
+    <nav class="dash-nav">
+      <button class="dash-nav-item active" data-section="perfil"  type="button"><span class="nav-icon">🏪</span><span>Mi perfil</span></button>
+      <button class="dash-nav-item" data-section="citas"          type="button"><span class="nav-icon">📅</span><span>Citas recibidas</span><span class="nav-badge" id="citasBadge" hidden>0</span></button>
+      <button class="dash-nav-item" data-section="resenas"        type="button"><span class="nav-icon">⭐</span><span>Reseñas</span></button>
+      <button class="dash-nav-item" data-section="plan"           type="button"><span class="nav-icon">🚀</span><span>Mi plan</span></button>
+    </nav>
+
+    <!-- Vista previa listing -->
+    <div class="sidebar-preview" id="sidebarPreview">
+      <p class="preview-label">Así te ven en el directorio</p>
+      <div class="preview-card card" id="previewCard">
+        <div class="preview-logo" id="previewLogo">🏥</div>
+        <span class="chip teal" id="previewChip">Clínica</span>
+        <strong id="previewName">Tu negocio</strong>
+        <p id="previewDesc">Tu descripción aparecerá aquí</p>
+        <span class="preview-price" id="previewPrice">—</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="dash-main">
+
+    <!-- ── PERFIL ── -->
+    <section class="dash-section active" id="sec-perfil">
+      <div class="dash-section-head">
+        <div>
+          <h2>Mi perfil de negocio</h2>
+          <p>Información que verán los dueños de mascotas en el directorio</p>
+        </div>
+        <button class="primary-btn" id="saveProfileBtn" type="button" form="profileForm">
+          <span class="btn-text">💾 Guardar cambios</span>
+          <span class="btn-loader" hidden>···</span>
+        </button>
+      </div>
+
+      <form id="profileForm" class="profile-form" novalidate>
+
+        <!-- Logo -->
+        <div class="card profile-logo-section">
+          <h4>Logo del negocio</h4>
+          <div class="logo-upload-row">
+            <div class="logo-preview" id="logoPreview">
+              <span id="logoEmoji">🏥</span>
+              <img id="logoImg" src="" alt="Logo" hidden />
+            </div>
+            <div>
+              <label class="secondary-btn" for="logoInput" style="display:inline-flex;cursor:pointer">📷 Subir logo</label>
+              <input type="file" id="logoInput" accept="image/*" hidden />
+              <p style="font-size:0.78rem;color:var(--text-3);margin-top:0.4rem">PNG, JPG · máx 5 MB · Recomendado: cuadrado</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info principal -->
+        <div class="card">
+          <h4 style="margin-bottom:1rem">Información principal</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bName">Nombre del negocio *</label>
+              <input type="text" id="bName" name="name" placeholder="Ej: Vet Norte" required />
+            </div>
+            <div class="form-group">
+              <label for="bType">Tipo *</label>
+              <select id="bType" name="type">
+                <option value="clinica">🏥 Clínica veterinaria</option>
+                <option value="tienda">🛍️ Tienda de mascotas</option>
+                <option value="servicio">✂️ Servicio (paseos, grooming…)</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="bDesc">Descripción <span style="font-size:0.72rem;color:var(--text-3)">(aparece en el directorio)</span></label>
+            <textarea id="bDesc" name="description" rows="3" placeholder="Describe tus servicios, especialidades y lo que te hace especial…"></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bPhone">Teléfono</label>
+              <input type="tel" id="bPhone" name="phone" placeholder="+1 555 0000" />
+            </div>
+            <div class="form-group">
+              <label for="bWebsite">Sitio web</label>
+              <input type="url" id="bWebsite" name="website" placeholder="https://tunegocio.com" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Ubicación y horarios -->
+        <div class="card">
+          <h4 style="margin-bottom:1rem">Ubicación y horarios</h4>
+          <div class="form-group">
+            <label for="bAddress">Dirección</label>
+            <input type="text" id="bAddress" name="address" placeholder="Calle, número, ciudad" />
+          </div>
+          <div class="form-group">
+            <label for="bHours">Horario de atención</label>
+            <input type="text" id="bHours" name="hours" placeholder="Ej: Lun-Vie 8:00-18:00 · Sáb 9:00-13:00" />
+          </div>
+          <div class="form-group">
+            <label for="bPriceModel">Modelo de precio / tarifa</label>
+            <input type="text" id="bPriceModel" name="price_model" placeholder="Ej: Consulta desde $50 · Emergencias 24/7" />
+          </div>
+        </div>
+
+        <!-- Servicios -->
+        <div class="card">
+          <h4 style="margin-bottom:0.35rem">Servicios que ofreces</h4>
+          <p style="font-size:0.82rem;margin-bottom:1rem">Selecciona los que aplican a tu negocio</p>
+          <div class="services-grid" id="servicesGrid">
+            <label class="service-tag"><input type="checkbox" value="urgencias" /> 🚨 Urgencias 24/7</label>
+            <label class="service-tag"><input type="checkbox" value="vacunacion" /> 💉 Vacunación</label>
+            <label class="service-tag"><input type="checkbox" value="cirugia" /> 🔬 Cirugía</label>
+            <label class="service-tag"><input type="checkbox" value="laboratorio" /> 🧪 Laboratorio</label>
+            <label class="service-tag"><input type="checkbox" value="nutricion" /> 🥗 Nutrición</label>
+            <label class="service-tag"><input type="checkbox" value="dental" /> 🦷 Dental</label>
+            <label class="service-tag"><input type="checkbox" value="grooming" /> ✂️ Grooming</label>
+            <label class="service-tag"><input type="checkbox" value="paseos" /> 🦮 Paseos</label>
+            <label class="service-tag"><input type="checkbox" value="delivery" /> 🚚 Delivery</label>
+            <label class="service-tag"><input type="checkbox" value="alimento" /> 🥩 Alimento premium</label>
+            <label class="service-tag"><input type="checkbox" value="accesorios" /> 🎀 Accesorios</label>
+            <label class="service-tag"><input type="checkbox" value="farmacia" /> 💊 Farmacia</label>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- ── CITAS ── -->
+    <section class="dash-section" id="sec-citas">
+      <div class="dash-section-head">
+        <div><h2>Citas recibidas</h2><p>Solicitudes de dueños de mascotas</p></div>
+      </div>
+      <div class="biz-appt-filters">
+        <button class="filter-btn active" data-status="all"        type="button">Todas</button>
+        <button class="filter-btn" data-status="pendiente"         type="button">Pendientes</button>
+        <button class="filter-btn" data-status="completada"        type="button">Completadas</button>
+        <button class="filter-btn" data-status="cancelada"         type="button">Canceladas</button>
+      </div>
+      <div id="bizApptList" class="biz-appt-list">
+        <div class="loading-state"><span class="loading-spinner"></span><p>Cargando citas…</p></div>
+      </div>
+    </section>
+
+    <!-- ── RESEÑAS ── -->
+    <section class="dash-section" id="sec-resenas">
+      <div class="dash-section-head">
+        <div><h2>Reseñas</h2><p>Lo que dicen los dueños de mascotas</p></div>
+      </div>
+      <div class="rating-summary card" id="ratingSummary">
+        <div class="rating-big" id="ratingBig">—</div>
+        <div class="rating-bars" id="ratingBars"></div>
+        <div class="rating-total" id="ratingTotal">Sin reseñas aún</div>
+      </div>
+      <div id="reviewList" class="review-list">
+        <div class="empty-state"><span>⭐</span><p>Las reseñas de tus clientes aparecerán aquí</p></div>
+      </div>
+    </section>
+
+    <!-- ── PLAN ── -->
+    <section class="dash-section" id="sec-plan">
+      <div class="dash-section-head">
+        <div><h2>Mi plan</h2><p>Gestiona tu suscripción y visibilidad en FIRU</p></div>
+      </div>
+
+      <div class="plan-current card" id="planCurrent">
+        <div class="plan-current-info">
+          <span class="plan-current-badge free">Plan Free</span>
+          <h3>Listing básico activo</h3>
+          <p>Tu negocio aparece en el directorio de FIRU con información básica.</p>
+        </div>
+        <div class="plan-stats" id="planStats">
+          <div><strong id="statViews">0</strong><span>Vistas este mes</span></div>
+          <div><strong id="statCitas">0</strong><span>Citas recibidas</span></div>
+          <div><strong id="statRating">—</strong><span>Calificación</span></div>
+        </div>
+      </div>
+
+      <div class="plans-grid">
+
+        <div class="plan-card card active-plan">
+          <div class="plan-card-head">
+            <span class="plan-tag free">Activo</span>
+            <h3>Free</h3>
+            <div class="plan-price"><strong>$0</strong><span>/mes</span></div>
+          </div>
+          <ul class="plan-features">
+            <li>✓ Listing en el directorio</li>
+            <li>✓ Información básica visible</li>
+            <li>✓ Reseñas de clientes</li>
+            <li class="disabled">✗ Posición destacada</li>
+            <li class="disabled">✗ Reservas directas en la app</li>
+            <li class="disabled">✗ Notificaciones push a usuarios</li>
+            <li class="disabled">✗ Estadísticas detalladas</li>
+            <li class="disabled">✗ Badge "Verificado"</li>
+          </ul>
+        </div>
+
+        <div class="plan-card card premium-plan">
+          <div class="plan-card-head">
+            <span class="plan-tag premium">Recomendado</span>
+            <h3>Premium</h3>
+            <div class="plan-price">
+              <strong id="premiumPrice">$29</strong><span>/mes</span>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-3);margin-top:0.25rem">Clínicas $29 · Tiendas y servicios $19</p>
+          </div>
+          <ul class="plan-features">
+            <li>✓ Todo lo del plan Free</li>
+            <li>✓ <strong>Posición destacada</strong> en directorio</li>
+            <li>✓ Reservas directas desde la app</li>
+            <li>✓ Notificaciones push a usuarios cercanos</li>
+            <li>✓ Estadísticas detalladas de vistas</li>
+            <li>✓ Badge "Verificado" en tu listing</li>
+            <li>✓ Soporte prioritario FIRU</li>
+            <li>✓ Campaña de bienvenida (1er mes)</li>
+          </ul>
+          <button class="primary-btn full upgrade-btn" id="upgradePlanBtn" type="button">
+            🚀 Activar plan Premium
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Bottom nav móvil -->
+<nav class="bottom-nav">
+  <button class="bottom-nav-item active" data-section="perfil"  type="button"><span>🏪</span><span>Perfil</span></button>
+  <button class="bottom-nav-item" data-section="citas"          type="button"><span>📅</span><span>Citas</span></button>
+  <button class="bottom-nav-item" data-section="resenas"        type="button"><span>⭐</span><span>Reseñas</span></button>
+  <button class="bottom-nav-item" data-section="plan"           type="button"><span>🚀</span><span>Plan</span></button>
+</nav>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+<script type="module" src="business.js"></script>
+</body>
+</html>
