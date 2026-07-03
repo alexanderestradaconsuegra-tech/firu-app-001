@@ -1,15 +1,22 @@
 /* FIRU · Business panel logic */
 import { supabase }            from './supabase.js';
 import { signOut, getSession } from './auth.js';
+import { sanitizeText, sanitizeUrl, sanitizeEmail, sanitizePhone, escapeHtml, validateFileUpload } from './sanitize.js';
 
 const $  = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 
 function toast(msg, type = 'info', icon = '🔔') {
-  const c = $('#toastContainer');
+  const c  = $('#toastContainer');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `<span class="t-icon">${icon}</span><span>${msg}</span>`;
+  const iEl = document.createElement('span');
+  iEl.className = 't-icon';
+  iEl.textContent = icon;
+  const mEl = document.createElement('span');
+  mEl.textContent = msg;
+  el.appendChild(iEl);
+  el.appendChild(mEl);
   c.appendChild(el);
   setTimeout(() => { el.classList.add('hiding'); el.addEventListener('animationend', () => el.remove(), { once: true }); }, 3400);
 }
@@ -144,6 +151,8 @@ function updatePlanStats(data) {
 $('#logoInput').addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
+  const check = validateFileUpload(file);
+  if (!check.ok) { toast(check.msg, 'error', '⚠️'); e.target.value = ''; return; }
   const reader = new FileReader();
   reader.onload = ev => {
     $('#logoImg').src    = ev.target.result;
@@ -180,7 +189,9 @@ $('#saveProfileBtn').addEventListener('click', async () => {
   const file   = $('#logoInput').files[0];
 
   if (file) {
-    const ext  = file.name.split('.').pop();
+    const check = validateFileUpload(file);
+    if (!check.ok) { toast(check.msg, 'error', '⚠️'); setLoading(btn, false); return; }
+    const ext  = file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '');
     const path = `${currentUser.id}/${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage.from('business-logos').upload(path, file, { upsert: true });
     if (upErr) { toast('Error subiendo logo', 'error', '⚠️'); setLoading(btn, false); return; }
@@ -191,14 +202,14 @@ $('#saveProfileBtn').addEventListener('click', async () => {
 
   const payload = {
     owner_id:    currentUser.id,
-    name:        $('#bName').value.trim(),
+    name:        sanitizeText($('#bName').value, 100),
     type:        $('#bType').value,
-    description: $('#bDesc').value.trim()      || null,
-    phone:       $('#bPhone').value.trim()     || null,
-    website:     $('#bWebsite').value.trim()   || null,
-    address:     $('#bAddress').value.trim()   || null,
-    hours:       $('#bHours').value.trim()     || null,
-    price_model: $('#bPriceModel').value.trim() || null,
+    description: sanitizeText($('#bDesc').value, 1000)      || null,
+    phone:       sanitizePhone($('#bPhone').value)          || null,
+    website:     sanitizeUrl($('#bWebsite').value)          || null,
+    address:     sanitizeText($('#bAddress').value, 200)    || null,
+    hours:       sanitizeText($('#bHours').value, 100)      || null,
+    price_model: sanitizeText($('#bPriceModel').value, 200) || null,
     is_active:   true,
     ...(logo_url && { logo_url }),
     ...(services.length && { description: $('#bDesc').value.trim() + (services.length ? `\n\nServicios: ${services.join(', ')}` : '') }),
@@ -251,14 +262,14 @@ function renderBizAppts(appts) {
     return;
   }
   list.innerHTML = appts.map(a => {
-    const d   = new Date(a.date);
-    const pet = a.pets ? `🐾 ${a.pets.name}` : '';
+    const d       = new Date(a.date);
+    const petName = a.pets ? `🐾 ${escapeHtml(a.pets.name)}` : '';
     return `
       <div class="biz-appt-card ${a.status}">
         <div class="biz-appt-info">
-          <strong>${a.title}</strong>
+          <strong>${escapeHtml(a.title)}</strong>
           <span>${d.getDate()} ${MESES[d.getMonth()]} · ${d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})}</span>
-          <span>${pet}${a.vet_name ? ' · ' + a.vet_name : ''}</span>
+          <span>${petName}${a.vet_name ? ' · ' + escapeHtml(a.vet_name) : ''}</span>
         </div>
         <div class="biz-appt-actions">
           <span class="appt-status ${a.status}">${a.status}</span>
@@ -328,11 +339,11 @@ function renderReviews(reviews) {
         <span class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</span>
         <span class="review-date">${new Date(r.created_at).toLocaleDateString('es',{day:'2-digit',month:'short',year:'numeric'})}</span>
       </div>
-      <p class="review-body">${r.comment || '(Sin comentario)'}</p>
+      <p class="review-body">${escapeHtml(r.comment || '(Sin comentario)')}</p>
       ${r.reply ? `
         <div class="review-reply">
           <strong>Tu respuesta</strong>
-          ${r.reply}
+          ${escapeHtml(r.reply)}
         </div>` : `
         <div class="reply-form">
           <input type="text" placeholder="Responder a esta reseña…" data-review="${r.id}" />
@@ -389,9 +400,9 @@ document.querySelector('#saveNotifBtn')?.addEventListener('click', async () => {
   setLoading(btn, true);
 
   const { error } = await supabase.from('profiles').update({
-    n8n_webhook_url:    document.querySelector('#n8nWebhook')?.value.trim() || null,
-    notification_email: document.querySelector('#notifEmail')?.value.trim()  || null,
-    notification_phone: document.querySelector('#notifPhone')?.value.trim()  || null,
+    n8n_webhook_url:    sanitizeUrl(document.querySelector('#n8nWebhook')?.value || '')   || null,
+    notification_email: sanitizeEmail(document.querySelector('#notifEmail')?.value || '') || null,
+    notification_phone: sanitizePhone(document.querySelector('#notifPhone')?.value || '') || null,
     notif_appointments: document.querySelector('#toggleBizAppts')?.classList.contains('on'),
   }).eq('id', currentUser.id);
 
@@ -406,24 +417,19 @@ document.querySelector('#testWebhookBtn')?.addEventListener('click', async () =>
   const btn = document.querySelector('#testWebhookBtn');
   setLoading(btn, true);
   try {
-    const res = await fetch(url, {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch(`${supabase.storageUrl}/functions/v1/test-webhook`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type:       'test',
-        title:      '🧪 Prueba de conexión FIRU Negocios',
-        owner_name: currentUser.user_metadata?.full_name || 'Negocio',
-        email:      document.querySelector('#notifEmail')?.value.trim() || currentUser.email,
-        pet_name:   'Cliente de prueba',
-        date:       new Date().toLocaleDateString('es'),
-        time:       new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }),
-        message:    'Conexión con FIRU Negocios funcionando ✓',
-      }),
+      headers: {
+        'Authorization': `Bearer ${session?.access_token}`,
+        'Content-Type': 'application/json',
+      },
     });
-    if (res.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
-    else        toast('El webhook respondió con error.', 'error', '⚠️');
+    const json = await res.json().catch(() => ({}));
+    if (res.ok && json.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
+    else toast('El webhook respondió con error. Revisa n8n.', 'error', '⚠️');
   } catch (_) {
-    toast('No se pudo conectar al webhook. Verifica la URL.', 'error', '⚠️');
+    toast('No se pudo conectar. Verifica la URL del webhook.', 'error', '⚠️');
   }
   setLoading(btn, false);
 });

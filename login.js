@@ -1,5 +1,6 @@
 /* FIRU · Login page logic */
 import { signIn, signUp, getSession, onAuthChange, signInWithGoogle, signInWithFacebook } from './auth.js';
+import { sanitizeText, sanitizeEmail, sanitizePhone } from './sanitize.js';
 
 const $ = s => document.querySelector(s);
 
@@ -76,7 +77,7 @@ $('#loginForm').addEventListener('submit', async e => {
   e.preventDefault();
   clearMsg();
   const btn   = $('#loginBtn');
-  const email = $('#loginEmail').value.trim();
+  const email = sanitizeEmail($('#loginEmail').value);
   const pass  = $('#loginPassword').value;
 
   if (!email || !pass) return showMsg('Completa todos los campos.');
@@ -104,20 +105,20 @@ $('#registerForm').addEventListener('submit', async e => {
   clearMsg();
   const btn      = $('#registerBtn');
   const role     = $('input[name=role]:checked')?.value || 'owner';
-  const fullName = $('#regName').value.trim();
-  const email    = $('#regEmail').value.trim();
+  const fullName = sanitizeText($('#regName').value, 100);
+  const email    = sanitizeEmail($('#regEmail').value);
   const pass     = $('#regPassword').value;
 
   if (!fullName || !email || !pass) return showMsg('Completa todos los campos.');
-  if (pass.length < 6) return showMsg('La contraseña debe tener al menos 6 caracteres.');
+  if (pass.length < 8) return showMsg('La contraseña debe tener al menos 8 caracteres.');
 
   const meta = {
     full_name: fullName,
     role,
     ...(role === 'business' && {
-      biz_name:  $('#bizName').value.trim(),
+      biz_name:  sanitizeText($('#bizName').value, 100),
       biz_type:  $('#bizType').value,
-      biz_phone: $('#bizPhone').value.trim(),
+      biz_phone: sanitizePhone($('#bizPhone').value),
     }),
   };
 

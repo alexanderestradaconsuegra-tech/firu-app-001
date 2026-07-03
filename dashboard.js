@@ -1,6 +1,7 @@
 /* FIRU · Dashboard logic */
 import { supabase }           from './supabase.js';
 import { signOut, getSession } from './auth.js';
+import { sanitizeText, sanitizeUrl, sanitizeEmail, sanitizePhone, escapeHtml, validateFileUpload } from './sanitize.js';
 
 /* ── Utilidades ─────────────────────────────── */
 const $  = s => document.querySelector(s);
@@ -10,7 +11,13 @@ function toast(msg, type = 'info', icon = '🔔') {
   const c  = $('#toastContainer');
   const el = document.createElement('div');
   el.className = `toast ${type}`;
-  el.innerHTML = `<span class="t-icon">${icon}</span><span>${msg}</span>`;
+  const iEl = document.createElement('span');
+  iEl.className = 't-icon';
+  iEl.textContent = icon;
+  const mEl = document.createElement('span');
+  mEl.textContent = msg;
+  el.appendChild(iEl);
+  el.appendChild(mEl);
   c.appendChild(el);
   setTimeout(() => {
     el.classList.add('hiding');
@@ -129,21 +136,21 @@ function buildPetCard(pet) {
   card.innerHTML = `
     <div class="pet-dash-photo">
       <span>${emoji}</span>
-      ${url ? `<img src="${url}" alt="${pet.name}" />` : ''}
+      ${url ? `<img src="${url}" alt="${escapeHtml(pet.name)}" />` : ''}
     </div>
     <div class="pet-dash-body">
       <div class="pet-dash-top">
         <div>
           <span class="chip ${chip}" style="margin-bottom:0.3rem">${label}</span>
-          <h4>${pet.name}</h4>
+          <h4>${escapeHtml(pet.name)}</h4>
         </div>
         <span class="status good">Activo</span>
       </div>
       <div class="pet-dash-meta">
         ${pet.age_years  ? `<span>🎂 ${pet.age_years} año${pet.age_years !== 1 ? 's' : ''}</span>` : ''}
         ${pet.weight_kg  ? `<span>⚖️ ${pet.weight_kg} kg</span>` : ''}
-        ${pet.breed      ? `<span>🔖 ${pet.breed}</span>` : ''}
-        ${pet.diet       ? `<span>🥗 ${pet.diet}</span>` : ''}
+        ${pet.breed      ? `<span>🔖 ${escapeHtml(pet.breed)}</span>` : ''}
+        ${pet.diet       ? `<span>🥗 ${escapeHtml(pet.diet)}</span>` : ''}
       </div>
       <div class="pet-dash-actions">
         <button class="edit-pet-btn"   data-id="${pet.id}" type="button">✏️ Editar</button>
@@ -237,6 +244,8 @@ $('#photoPreview')?.addEventListener('click', () => $('#photoInput').click());
 $('#photoInput')?.addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
+  const check = validateFileUpload(file);
+  if (!check.ok) { toast(check.msg, 'error', '⚠️'); e.target.value = ''; return; }
   const reader = new FileReader();
   reader.onload = ev => {
     $('#photoImg').src = ev.target.result;
@@ -263,7 +272,9 @@ $('#petForm')?.addEventListener('submit', async e => {
 
   let photo_url = null;
   if (file) {
-    const ext  = file.name.split('.').pop();
+    const check = validateFileUpload(file);
+    if (!check.ok) { toast(check.msg, 'error', '⚠️'); setLoading(btn, false); return; }
+    const ext  = file.name.split('.').pop().toLowerCase().replace(/[^a-z0-9]/g, '');
     const path = `${currentUser.id}/${Date.now()}.${ext}`;
     const { error: upErr } = await supabase.storage.from('pet-photos').upload(path, file, { upsert: true });
     if (upErr) { toast('Error subiendo foto', 'error', '⚠️'); setLoading(btn, false); return; }
@@ -272,15 +283,17 @@ $('#petForm')?.addEventListener('submit', async e => {
 
   const payload = {
     user_id:    currentUser.id,
-    name:       $('#pName').value.trim(),
+    name:       sanitizeText($('#pName').value, 100),
     type:       $('#pType').value,
-    breed:      $('#pBreed').value.trim() || null,
+    breed:      sanitizeText($('#pBreed').value, 100) || null,
     age_years:  parseFloat($('#pAge').value)    || null,
     weight_kg:  parseFloat($('#pWeight').value) || null,
-    diet:       $('#pDiet').value.trim()  || null,
-    notes:      $('#pNotes').value.trim() || null,
+    diet:       sanitizeText($('#pDiet').value, 200) || null,
+    notes:      sanitizeText($('#pNotes').value, 500) || null,
     ...(photo_url && { photo_url }),
   };
+
+  if (!payload.name) { toast('El nombre de la mascota es obligatorio.', 'error', '⚠️'); setLoading(btn, false); return; }
 
   const { error } = id
     ? await supabase.from('pets').update(payload).eq('id', id)
@@ -328,7 +341,7 @@ function renderReminders(reminders) {
   container.innerHTML = Object.entries(groups).map(([name, items]) => `
     <div>
       <div class="reminder-group-title">
-        ${petEmojis[items[0].pets?.type || ''] || '🔔'} ${name}
+        ${petEmojis[items[0].pets?.type || ''] || '🔔'} ${escapeHtml(name)}
       </div>
       ${items.map(r => reminderRowHtml(r)).join('')}
     </div>
@@ -362,7 +375,7 @@ function reminderRowHtml(r) {
     <div class="reminder-row ${r.is_active ? '' : 'inactive'}">
       <span class="reminder-type-icon">${reminderIcons[r.type] || '🔔'}</span>
       <div class="reminder-info">
-        <strong>${r.title}</strong>
+        <strong>${escapeHtml(r.title)}</strong>
         <span>${freq}</span>
       </div>
       <span class="reminder-time">${time}</span>
@@ -395,7 +408,7 @@ $('#reminderForm')?.addEventListener('submit', async e => {
   const { error } = await supabase.from('reminders').insert({
     user_id:     currentUser.id,
     pet_id:      petId,
-    title:       $('#rTitle').value.trim(),
+    title:       sanitizeText($('#rTitle').value, 100),
     type:        $('#rType').value,
     time_of_day: $('#rTime').value || null,
     frequency:   $('#rFreq').value,
@@ -441,7 +454,7 @@ async function selectHealthPet(petId) {
 function renderHealthTimeline(records, pet) {
   const content = $('#healthContent');
   if (!records.length) {
-    content.innerHTML = `<div class="empty-state"><span>📋</span><p>No hay registros de salud para ${pet?.name || 'esta mascota'}</p></div>`;
+    content.innerHTML = `<div class="empty-state"><span>📋</span><p>No hay registros de salud para ${escapeHtml(pet?.name || 'esta mascota')}</p></div>`;
     return;
   }
   const typeIcons = { peso:'⚖️', consulta:'🩺', cirugia:'🔬', examen:'📋', otro:'📝' };
@@ -449,9 +462,9 @@ function renderHealthTimeline(records, pet) {
     <div class="timeline-item">
       <div class="timeline-dot ${r.type}">${typeIcons[r.type] || '📝'}</div>
       <div class="timeline-body">
-        <strong>${r.type.charAt(0).toUpperCase() + r.type.slice(1)} ${r.value ? `— ${r.value} ${r.unit || (r.type === 'peso' ? 'kg' : '')}` : ''}</strong>
-        <span>${fmtDate(r.date)}${r.vet_name ? ` · ${r.vet_name}` : ''}${r.clinic ? ` · ${r.clinic}` : ''}</span>
-        ${r.notes ? `<p style="font-size:0.78rem;color:var(--text-2);margin-top:0.25rem">${r.notes}</p>` : ''}
+        <strong>${escapeHtml(r.type.charAt(0).toUpperCase() + r.type.slice(1))} ${r.value ? `— ${escapeHtml(String(r.value))} ${escapeHtml(r.unit || (r.type === 'peso' ? 'kg' : ''))}` : ''}</strong>
+        <span>${fmtDate(r.date)}${r.vet_name ? ` · ${escapeHtml(r.vet_name)}` : ''}${r.clinic ? ` · ${escapeHtml(r.clinic)}` : ''}</span>
+        ${r.notes ? `<p style="font-size:0.78rem;color:var(--text-2);margin-top:0.25rem">${escapeHtml(r.notes)}</p>` : ''}
       </div>
     </div>`).join('')}</div>`;
 }
@@ -485,9 +498,9 @@ $('#healthForm')?.addEventListener('submit', async e => {
     type:     $('#hType').value,
     value:    parseFloat($('#hValue').value) || null,
     date:     $('#hDate').value,
-    vet_name: $('#hVet').value.trim()    || null,
-    clinic:   $('#hClinic').value.trim() || null,
-    notes:    $('#hNotes').value.trim()  || null,
+    vet_name: sanitizeText($('#hVet').value, 100)    || null,
+    clinic:   sanitizeText($('#hClinic').value, 100) || null,
+    notes:    sanitizeText($('#hNotes').value, 500)  || null,
   });
 
   if (error) toast('Error guardando registro', 'error', '⚠️');
@@ -519,8 +532,8 @@ function renderAppointments(appts) {
   }
   const MESES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
   list.innerHTML = appts.map(a => {
-    const d   = new Date(a.date);
-    const pet = a.pets ? `${petEmojis[a.pets.type] || '🐾'} ${a.pets.name}` : '';
+    const d       = new Date(a.date);
+    const petName = a.pets ? `${petEmojis[a.pets.type] || '🐾'} ${escapeHtml(a.pets.name)}` : '';
     return `
       <div class="appt-card">
         <div class="appt-date-block">
@@ -528,8 +541,8 @@ function renderAppointments(appts) {
           <span class="appt-mon">${MESES[d.getMonth()]}</span>
         </div>
         <div class="appt-info">
-          <strong>${a.title}</strong>
-          <span>${pet ? pet + ' · ' : ''}${a.clinic || ''}${a.vet_name ? ' · ' + a.vet_name : ''} · ${d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})}</span>
+          <strong>${escapeHtml(a.title)}</strong>
+          <span>${petName ? petName + ' · ' : ''}${escapeHtml(a.clinic || '')}${a.vet_name ? ' · ' + escapeHtml(a.vet_name) : ''} · ${d.toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})}</span>
         </div>
         <span class="appt-status ${a.status}">${a.status}</span>
       </div>`;
@@ -563,11 +576,11 @@ $('#apptForm')?.addEventListener('submit', async e => {
     .insert({
       user_id:  currentUser.id,
       pet_id:   $('#aPet').value  || null,
-      title:    $('#aTitle').value.trim(),
+      title:    sanitizeText($('#aTitle').value, 100),
       type:     $('#aType').value,
       date:     $('#aDate').value,
-      clinic:   $('#aClinic').value.trim() || null,
-      vet_name: $('#aVet').value.trim()    || null,
+      clinic:   sanitizeText($('#aClinic').value, 100) || null,
+      vet_name: sanitizeText($('#aVet').value, 100)    || null,
       status:   'pendiente',
     })
     .select()
@@ -594,9 +607,13 @@ document.addEventListener('keydown', e => {
 ════════════════════════════════════════════ */
 async function notifyAppointment(apptId) {
   try {
-    await fetch('https://jyceccbtkritogjzqcma.supabase.co/functions/v1/notify-appointment', {
+    const { data: { session } } = await supabase.auth.getSession();
+    await fetch(`${supabase.storageUrl}/functions/v1/notify-appointment`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Authorization': `Bearer ${session?.access_token}`,
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ appointment_id: apptId }),
     });
   } catch (_) {}
@@ -630,9 +647,9 @@ $('#saveNotifBtn')?.addEventListener('click', async () => {
   setLoading(btn, true);
 
   const { error } = await supabase.from('profiles').update({
-    n8n_webhook_url:    $('#n8nWebhook').value.trim() || null,
-    notification_email: $('#notifEmail').value.trim()  || null,
-    notification_phone: $('#notifPhone').value.trim()  || null,
+    n8n_webhook_url:    sanitizeUrl($('#n8nWebhook').value)     || null,
+    notification_email: sanitizeEmail($('#notifEmail').value)   || null,
+    notification_phone: sanitizePhone($('#notifPhone').value)   || null,
     notif_reminders:    $('#toggleRemindersNotif').classList.contains('on'),
     notif_appointments: $('#toggleApptsNotif').classList.contains('on'),
     notif_vaccines:     $('#toggleVaccinesNotif').classList.contains('on'),
@@ -649,24 +666,19 @@ $('#testWebhookBtn')?.addEventListener('click', async () => {
   const btn = $('#testWebhookBtn');
   setLoading(btn, true);
   try {
-    const res = await fetch(url, {
+    const { data: { session } } = await supabase.auth.getSession();
+    const res = await fetch(`${supabase.storageUrl}/functions/v1/test-webhook`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        type:       'test',
-        title:      '🧪 Prueba de conexión FIRU',
-        owner_name: currentUser.user_metadata?.full_name || 'Usuario',
-        email:      $('#notifEmail').value.trim() || currentUser.email,
-        pet_name:   'Mascota de prueba',
-        date:       new Date().toLocaleDateString('es'),
-        time:       new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' }),
-        message:    'Si ves esto, la conexión con FIRU funciona correctamente ✓',
-      }),
+      headers: {
+        'Authorization': `Bearer ${session?.access_token}`,
+        'Content-Type': 'application/json',
+      },
     });
-    if (res.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
-    else        toast('El webhook respondió con error. Revisa n8n.', 'error', '⚠️');
+    const json = await res.json().catch(() => ({}));
+    if (res.ok && json.ok) toast('¡Conexión exitosa! Revisa tu n8n', 'success', '✅');
+    else toast('El webhook respondió con error. Revisa n8n.', 'error', '⚠️');
   } catch (_) {
-    toast('No se pudo conectar al webhook. Verifica la URL.', 'error', '⚠️');
+    toast('No se pudo conectar. Verifica la URL del webhook.', 'error', '⚠️');
   }
   setLoading(btn, false);
 });
